@@ -35,11 +35,13 @@ curl "https://api.unpaywall.org/v2/DOI?email=YOUR_EMAIL"
 
 **Parameters:**
 - `DOI` - The paper's DOI (URL-encoded if needed)
-- `email` - Your email (required, for courtesy/contact)
+- `email` - User's email (required, for courtesy/contact)
+
+**IMPORTANT: Ask user for their email at the start of research session. Do NOT use placeholder emails like claude@anthropic.com or researcher@example.com.**
 
 **Example:**
 ```bash
-curl "https://api.unpaywall.org/v2/10.1038/nature12373?email=researcher@example.com"
+curl "https://api.unpaywall.org/v2/10.1038/nature12373?email=user@example.com"
 ```
 
 ### Response Format
@@ -314,6 +316,7 @@ time.sleep(0.1)  # Rate limiting
 
 ## Common Mistakes
 
+**Using placeholder email:** Using claude@anthropic.com or researcher@example.com → Ask user for their real email
 **Not including email:** Required parameter, requests will fail
 **Checking every paper:** Only check when needed (score ≥7, no PMC)
 **Ignoring version type:** Published version better than preprint

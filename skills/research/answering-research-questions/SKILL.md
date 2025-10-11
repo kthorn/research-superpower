@@ -42,6 +42,7 @@ Extract from user's request:
 - "Are you looking for in vitro or in vivo data?"
 - "Any specific time frame?"
 - "Which kinases are you most interested in?"
+- **"What email address should I use for Unpaywall API requests?"** (Required for finding open access papers)
 
 ### Phase 2: Initialize Research Session
 

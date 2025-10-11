@@ -79,20 +79,38 @@ curl -L "https://doi.org/10.1234/example.2023"
 # May hit paywall - check response
 ```
 
-**C. Unpaywall (if paywalled):**
+**C. Unpaywall (MANDATORY if paywalled):**
+**CRITICAL: If step B hits a paywall, you MUST immediately try Unpaywall before giving up.**
+
 Use `skills/research/finding-open-access-papers` to find free OA version:
 ```bash
-curl "https://api.unpaywall.org/v2/DOI?email=your@email.com"
-# Often finds versions in repositories, preprint servers
+curl "https://api.unpaywall.org/v2/DOI?email=USER_EMAIL"
+# Often finds versions in repositories, preprint servers, author copies
+# IMPORTANT: Ask user for their email if not already provided - do NOT use claude@anthropic.com
+```
+
+Report to user:
+```
+⚠️  Paper behind paywall, checking Unpaywall...
+✓ Found open access version at [repository/preprint server]
+```
+
+or
+
+```
+⚠️  Paper behind paywall, checking Unpaywall...
+✗ No open access version available - continuing with abstract only
 ```
 
 **D. Preprints (direct):**
 - Check bioRxiv: `https://www.biorxiv.org/content/10.1101/{doi}`
 - Check arXiv (for computational papers)
 
-**If full text unavailable:**
-- Note in SUMMARY.md: "⚠️ Full text behind paywall - no OA version found"
+**If full text unavailable AFTER trying Unpaywall:**
+- Note in SUMMARY.md: "⚠️ Full text behind paywall - no OA version found via Unpaywall"
 - Continue with abstract-only evaluation (limited)
+
+**CRITICAL: Do NOT skip Unpaywall check. Many paywalled papers have free versions in repositories.**
 
 #### 2. Scan for Relevant Content
 
@@ -241,7 +259,8 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 ## Integration with Other Skills
 
 **During full text fetching:**
-- If paywalled: Use `skills/research/finding-open-access-papers` (Unpaywall)
+- **If paywalled: MANDATORY to use `skills/research/finding-open-access-papers` (Unpaywall)**
+- Do NOT skip this step - Unpaywall finds ~50% of paywalled papers for free
 
 **After finding relevant paper:**
 1. **Extract findings** to SUMMARY.md
@@ -305,6 +324,7 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 ## Common Mistakes
 
+**Skipping Unpaywall:** Hitting paywall and giving up → ALWAYS check Unpaywall first, many papers have free versions
 **Creating custom files:** Making evaluated-papers.json, priority-papers.txt, etc. → Use ONLY papers-reviewed.json and SUMMARY.md
 **Too strict:** Skipping papers that mention data indirectly → Re-read abstract carefully
 **Too lenient:** Deep diving into tangentially related papers → Focus on specific data user needs
