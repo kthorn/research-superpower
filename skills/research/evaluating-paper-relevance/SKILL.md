@@ -79,12 +79,19 @@ curl -L "https://doi.org/10.1234/example.2023"
 # May hit paywall - check response
 ```
 
-**C. Preprints:**
+**C. Unpaywall (if paywalled):**
+Use `skills/research/finding-open-access-papers` to find free OA version:
+```bash
+curl "https://api.unpaywall.org/v2/DOI?email=your@email.com"
+# Often finds versions in repositories, preprint servers
+```
+
+**D. Preprints (direct):**
 - Check bioRxiv: `https://www.biorxiv.org/content/10.1101/{doi}`
 - Check arXiv (for computational papers)
 
 **If full text unavailable:**
-- Note in SUMMARY.md: "⚠️ Full text behind paywall - evaluated from abstract only"
+- Note in SUMMARY.md: "⚠️ Full text behind paywall - no OA version found"
 - Continue with abstract-only evaluation (limited)
 
 #### 2. Scan for Relevant Content
@@ -222,6 +229,9 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 ## Integration with Other Skills
 
+**During full text fetching:**
+- If paywalled: Use `skills/research/finding-open-access-papers` (Unpaywall)
+
 **After finding relevant paper:**
 1. **Extract findings** to SUMMARY.md
 2. **Download files** to papers/ folder
@@ -298,7 +308,7 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 |------|--------|
 | Check if reviewed | Look up DOI in papers-reviewed.json |
 | Score abstract | Keywords (0-3) + Data type (0-4) + Specificity (0-3) |
-| Get full text | Try PMC → DOI → Preprints |
+| Get full text | Try PMC → DOI → Unpaywall → Preprints |
 | Find data | Grep for terms, focus on Methods/Results/Tables |
 | Download PDF | `curl -L -o papers/FILE.pdf URL` |
 | Update tracking | Add to papers-reviewed.json + SUMMARY.md |
