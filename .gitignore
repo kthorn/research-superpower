@@ -1,0 +1,21 @@
+# Research session outputs
+research-sessions/
+
+# Logs and indexes
+*.log
+*.jsonl
+
+# API keys (if added later)
+.env
+api-keys.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
