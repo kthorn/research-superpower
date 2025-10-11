@@ -65,6 +65,8 @@ mkdir -p "research-sessions/YYYY-MM-DD-description"/{papers,citations}
 
 **Initialize files:**
 
+**CRITICAL: Use ONLY these three files for tracking. Do NOT create custom files like "TOP_PRIORITY_PAPERS.md" or "FORWARD_CITATION_ANALYSIS.md".**
+
 **papers-reviewed.json:**
 ```json
 {}
@@ -297,6 +299,8 @@ For large research sessions, consider creating a synthesis script:
 - Shared `SUMMARY.md` (findings accumulation)
 - Shared `citation-graph.json` (relationship tracking)
 
+**CRITICAL: ALL findings MUST go into SUMMARY.md, ALL paper tracking MUST go into papers-reviewed.json. Do NOT create custom markdown files or text files.**
+
 ## Error Handling
 
 **No results found:**
@@ -333,6 +337,7 @@ For large research sessions, consider creating a synthesis script:
 
 ## Common Mistakes
 
+**Creating custom files:** Making TOP_PRIORITY_PAPERS.md, FORWARD_CITATION_ANALYSIS.md, etc. → ALL findings go in SUMMARY.md, ALL tracking goes in papers-reviewed.json
 **Silent work:** User can't see progress → Report EVERY paper, give updates every 10
 **Non-clickable identifiers:** Plain text DOIs/PMIDs → Always use markdown links
 **Jumping to evaluation without good search:** Too narrow results → Optimize search first

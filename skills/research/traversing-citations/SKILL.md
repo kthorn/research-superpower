@@ -159,6 +159,8 @@ else:
 }
 ```
 
+**CRITICAL: Use ONLY citation-graph.json for citation tracking. Do NOT create custom files like forward_citation_pmids.txt or citation_analysis.md. All findings go in SUMMARY.md.**
+
 ### 5. Process Queue
 
 **Add relevant citations to processing queue:**
@@ -251,6 +253,7 @@ Before adding citation to queue:
 
 ## Common Mistakes
 
+**Creating custom analysis files:** Making forward_citation_pmids.txt, CITATION_ANALYSIS.md, etc. → Use ONLY citation-graph.json and SUMMARY.md
 **Following all citations:** Exponential explosion → Filter before adding to queue
 **Ignoring context:** Citation might be tangential → Read context strings
 **Not deduplicating:** Re-process same papers → Always check papers-reviewed.json

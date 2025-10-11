@@ -160,6 +160,8 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 #### 5. Update Tracking Files
 
+**CRITICAL: Use ONLY papers-reviewed.json and SUMMARY.md. Do NOT create custom tracking files.**
+
 **Add to papers-reviewed.json:**
 ```json
 {
@@ -303,6 +305,7 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 ## Common Mistakes
 
+**Creating custom files:** Making evaluated-papers.json, priority-papers.txt, etc. → Use ONLY papers-reviewed.json and SUMMARY.md
 **Too strict:** Skipping papers that mention data indirectly → Re-read abstract carefully
 **Too lenient:** Deep diving into tangentially related papers → Focus on specific data user needs
 **Missing supplementary data:** Many papers hide key data in SI → Always check for supplementary files
