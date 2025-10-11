@@ -240,10 +240,23 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 4. **Save results** - JSON with scored papers categorized by relevance
 5. **Progress reporting** - Print status as it runs
 
-**Pattern:**
-- Parameterize keywords and data types for the specific query
-- Output JSON that can be read for Stage 2 (deep dive)
-- Keep script with research session for reproducibility
+**Pattern - Two-script pipeline:**
+
+**Script 1: Abstract screening** (`screen_papers.py`)
+- Fetch and score abstracts
+- Output: `evaluated-papers.json` with categorized papers
+
+**Script 2: Deep dive** (`deep_dive_papers.py`)
+- Read Script 1 results
+- Fetch full text for highly relevant papers (score ≥8)
+- Extract specific data (tables, figures, values, compound IDs)
+- Update `evaluated-papers.json` with detailed findings
+
+**Script design:**
+- Parameterize keywords and data types for specific query
+- Progressive enhancement - add detail to same JSON file
+- Include rate limiting (350ms between API calls)
+- Keep scripts with research session for reproducibility
 
 **When NOT to create helper script:**
 - Few papers (<20)
