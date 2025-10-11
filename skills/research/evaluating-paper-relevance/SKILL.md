@@ -56,7 +56,23 @@ or
 
 **Goal:** Extract specific data/methods from promising papers
 
-#### 1. Fetch Full Text
+#### 1. Check ChEMBL (for medicinal chemistry papers)
+
+**If paper describes medicinal chemistry / SAR data:**
+
+Use `skills/research/checking-chembl` to check if paper is in ChEMBL database:
+```bash
+curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?doi=$doi"
+```
+
+**If found in ChEMBL:**
+- Note ChEMBL ID and activity count in SUMMARY.md
+- Report to user: "✓ ChEMBL: CHEMBL3870308 (45 data points)"
+- Structured SAR data available without PDF parsing
+
+**Continue to full text fetch for context, methods, discussion.**
+
+#### 2. Fetch Full Text
 
 **Try in order:**
 
@@ -258,15 +274,21 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 ## Integration with Other Skills
 
+**For medicinal chemistry papers:**
+- **Use `skills/research/checking-chembl`** to find curated SAR data
+- Check BEFORE attempting to parse activity tables from PDFs
+- ~30-40% of medicinal chemistry papers have ChEMBL data
+
 **During full text fetching:**
 - **If paywalled: MANDATORY to use `skills/research/finding-open-access-papers` (Unpaywall)**
 - Do NOT skip this step - Unpaywall finds ~50% of paywalled papers for free
 
 **After finding relevant paper:**
-1. **Extract findings** to SUMMARY.md
-2. **Download files** to papers/ folder
-3. **Call traversing-citations skill** to find related papers
-4. **Update papers-reviewed.json** to avoid re-processing
+1. **Check ChEMBL** (if medicinal chemistry)
+2. **Extract findings** to SUMMARY.md
+3. **Download files** to papers/ folder
+4. **Call traversing-citations skill** to find related papers
+5. **Update papers-reviewed.json** to avoid re-processing
 
 ## Scoring Rubric
 

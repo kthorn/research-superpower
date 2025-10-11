@@ -6,6 +6,7 @@ Give Claude Code superpowers for scientific research. Search literature, evaluat
 
 - **Literature Search** - PubMed and Semantic Scholar integration
 - **Smart Paper Evaluation** - Abstract screening + deep dive for relevant data
+- **ChEMBL Integration** - Check if medicinal chemistry papers have curated SAR data (~99k papers)
 - **Open Access Finding** - Unpaywall API to find free versions of paywalled papers
 - **Citation Traversal** - Intelligent backward and forward citation following
 - **Research Orchestration** - End-to-end workflow for answering research questions
@@ -39,7 +40,9 @@ research-superpowers/
 │       ├── answering-research-questions/    # Main orchestration
 │       ├── searching-literature/            # PubMed search
 │       ├── evaluating-paper-relevance/      # Abstract screening + deep dive
-│       └── traversing-citations/            # Citation network traversal
+│       ├── checking-chembl/                 # ChEMBL SAR data lookup
+│       ├── traversing-citations/            # Citation network traversal
+│       └── finding-open-access-papers/      # Unpaywall integration
 ├── scripts/
 │   └── find-skills              # Search for relevant skills
 └── hooks/
@@ -68,7 +71,9 @@ research-sessions/2025-10-11-btk-inhibitor-selectivity/
 - **answering-research-questions** - Main orchestration workflow
 - **searching-literature** - PubMed API integration
 - **evaluating-paper-relevance** - Two-stage relevance filtering
+- **checking-chembl** - ChEMBL database lookup for medicinal chemistry papers
 - **traversing-citations** - Smart citation following via Semantic Scholar
+- **finding-open-access-papers** - Unpaywall API for finding free full text
 
 ## Philosophy
 
@@ -125,6 +130,12 @@ When prompted, choose option 2: "Yes, and don't ask again for similar commands i
 - Free: 100,000 requests per day
 - No API key required (just provide email)
 - [Learn more](https://unpaywall.org/products/api)
+
+**ChEMBL:**
+- Free, no API key required
+- ~99,000 curated medicinal chemistry papers
+- Structured SAR data (IC50, MIC, structures, assays)
+- [Learn more](https://www.ebi.ac.uk/chembl/)
 
 ## Contributing
 
