@@ -34,22 +34,34 @@ Use this skill when:
 
 **No authentication required**
 
+**CRITICAL: ChEMBL can ONLY be queried by DOI, NOT by PMID**
+- The API returns PMID in results, but does not accept it as a query parameter
+- Always use DOI for lookups: `?doi=10.1234/example`
+- PMID queries will return 0 results even if paper exists in ChEMBL
+
 **Two-step process:**
 1. Check if paper (by DOI) is in ChEMBL
 2. If yes, retrieve bioactivity data
 
 ## Step 1: Check if Paper in ChEMBL
 
-**Query by DOI:**
+**Query by DOI (ONLY method that works):**
 ```bash
 curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?doi=DOI"
 ```
 
-**Example:**
+**⚠️ IMPORTANT: Must use DOI, not PMID**
 ```bash
+# ✅ CORRECT - Use DOI
 doi="10.1021/jm401507s"
 curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?doi=$doi"
+
+# ❌ WRONG - PMID won't work (will return 0 results)
+pmid="24446688"
+curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?pubmed_id=$pmid"  # Does NOT work!
 ```
+
+**If you only have PMID:** Fetch DOI from PubMed first, then query ChEMBL with the DOI.
 
 **Response structure:**
 ```json
@@ -75,6 +87,7 @@ curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?doi=$doi"
 **Key fields:**
 - `document_chembl_id` - Use this to retrieve activity data
 - `doc_type` - "PUBLICATION" (from literature) or "DATASET" (deposited)
+- `pubmed_id` - PMID is in the response, but cannot be used to query ChEMBL
 - If `total_count` = 0, paper not in ChEMBL
 
 **Parse response:**
@@ -287,9 +300,12 @@ import json
 import sys
 
 def check_chembl(doi):
-    """Check if DOI is in ChEMBL and return summary"""
+    """Check if DOI is in ChEMBL and return summary
 
-    # Query document
+    IMPORTANT: Must use DOI, not PMID. ChEMBL API does not accept PMID queries.
+    """
+
+    # Query document (ONLY works with DOI)
     doc_url = f"https://www.ebi.ac.uk/chembl/api/data/document.json?doi={doi}"
     try:
         doc_response = requests.get(doc_url, timeout=10).json()
@@ -337,6 +353,7 @@ python3 check_chembl.py "10.1021/jm401507s"
 
 ## Common Mistakes
 
+**Querying by PMID:** Using PMID instead of DOI → Always returns 0 results, ChEMBL only accepts DOI queries
 **Skipping ChEMBL check:** Not checking medicinal chemistry papers → Missing structured data that's already extracted
 **Checking non-medchem papers:** Checking genomics/cell biology papers → Wasting time, won't be in ChEMBL
 **Not reporting status:** Silent ChEMBL checks → User can't see what's happening
