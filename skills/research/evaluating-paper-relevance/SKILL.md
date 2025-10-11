@@ -18,8 +18,9 @@ Two-stage screening process: quick abstract scoring followed by deep dive into p
 Use this skill when:
 - Have list of papers from search
 - Need to determine which papers have relevant data
-- User asks for specific information (IC50 values, methods, etc.)
+- User asks for specific information (measurements, protocols, datasets, etc.)
 - Screening papers one-by-one
+- Any research domain (medicinal chemistry, genomics, ecology, computational methods, etc.)
 
 ## Two-Stage Process
 
@@ -28,9 +29,10 @@ Use this skill when:
 **Goal:** Quickly identify promising papers
 
 **Score 0-10 based on:**
-- **Keywords match (0-3 points)**: Does abstract mention key terms?
-- **Data type match (0-4 points)**: Does it mention the data user needs? (e.g., "IC50 values", "synthesis methods")
-- **Specificity (0-3 points)**: Is it specific to user's question or just general background?
+- **Keywords match (0-3 points)**: Does abstract mention key terms relevant to the query?
+- **Data type match (0-4 points)**: Does it mention the specific information user needs?
+  - Examples: measurements (IC50, expression levels, population sizes), protocols, datasets, structures, sequences, code
+- **Specificity (0-3 points)**: Is it specific to user's question or just general background/review?
 
 **Decision rules:**
 - Score < 5: Skip (not relevant)
@@ -136,44 +138,87 @@ or
 - **Tables/Figures**: Often contain the specific data user needs
 - **Supplementary Information**: Additional data, extended methods
 
-**What to look for:**
-- Specific data user requested (e.g., IC50 = 45 nM)
-- Methods described in detail
-- Compound structures, identifiers
-- Experimental conditions
-- Statistical analysis
+**What to look for (adapt to research domain):**
+- Specific data user requested
+  - **Medicinal chemistry**: IC50 values, compound structures, SAR data
+  - **Genomics**: Gene expression levels, sequences, variant data
+  - **Ecology**: Population measurements, species counts, environmental parameters
+  - **Computational**: Algorithms, code availability, performance benchmarks
+  - **Clinical**: Patient outcomes, treatment protocols, sample sizes
+- Methods/protocols described in detail
+- Statistical analysis and significance
+- Data availability statements
+- Code/data repositories mentioned
 
-**Use grep/text search:**
+**Use grep/text search (adapt search terms):**
 ```bash
-# Search for specific terms in full text
-grep -i "IC50\|inhibitory concentration" paper.xml
-grep -i "synthesis\|synthetic route" paper.xml
+# Examples for different domains
+grep -i "IC50\|Ki\|MIC" paper.xml                    # Medicinal chemistry
+grep -i "expression\|FPKM\|RNA-seq" paper.xml        # Genomics
+grep -i "abundance\|population\|sampling" paper.xml  # Ecology
+grep -i "algorithm\|github\|code" paper.xml          # Computational
 ```
 
 #### 3. Extract Findings
 
-**Create structured extraction:**
+**Create structured extraction (adapt to research domain):**
 
+**Example 1: Medicinal chemistry**
 ```json
 {
-  "doi": "10.1234/example.2023",
-  "title": "Paper Title",
+  "doi": "10.1234/medchem.2023",
+  "title": "Novel kinase inhibitors...",
   "relevance_score": 9,
   "findings": {
     "data_found": [
       "IC50 values for compounds 1-12 (Table 2)",
-      "Selectivity against 50 kinases (Figure 3)",
-      "Synthesis route for lead compound (Scheme 1)"
+      "Selectivity data (Figure 3)",
+      "Synthesis route (Scheme 1)"
     ],
     "key_results": [
-      "Compound 7: IC50 = 12 nM (BTK), >1000 nM (other kinases)",
-      "10-step synthesis, 34% overall yield"
+      "Compound 7: IC50 = 12 nM",
+      "10-step synthesis, 34% yield"
+    ]
+  }
+}
+```
+
+**Example 2: Genomics**
+```json
+{
+  "doi": "10.1234/genomics.2023",
+  "title": "Gene expression in disease...",
+  "relevance_score": 8,
+  "findings": {
+    "data_found": [
+      "RNA-seq data for 50 samples (GEO: GSE12345)",
+      "Differential expression results (Table 1)",
+      "Gene set enrichment analysis (Figure 4)"
     ],
-    "sections": {
-      "methods": "Page 3, paragraph 2",
-      "results": "Table 2 (page 7), Figure 3 (page 9)",
-      "supplementary": "SI Table S1 has full kinase panel"
-    }
+    "key_results": [
+      "123 genes upregulated (FDR < 0.05)",
+      "Pathway enrichment: immune response"
+    ]
+  }
+}
+```
+
+**Example 3: Computational methods**
+```json
+{
+  "doi": "10.1234/compbio.2023",
+  "title": "Novel alignment algorithm...",
+  "relevance_score": 9,
+  "findings": {
+    "data_found": [
+      "Algorithm pseudocode (Methods)",
+      "Code repository (github.com/user/tool)",
+      "Benchmark results (Table 2)"
+    ],
+    "key_results": [
+      "10x faster than BLAST",
+      "98% accuracy on test dataset"
+    ]
   }
 }
 ```
@@ -232,30 +277,53 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 **Always add papers even if skipped** - this prevents re-processing and documents what was already checked.
 
-**Add to SUMMARY.md:**
+**Add to SUMMARY.md (examples for different domains):**
+
+**Medicinal chemistry example:**
 ```markdown
-## Highly Relevant Papers (Score ≥ 8)
+### [Novel kinase inhibitors with improved selectivity](https://doi.org/10.1234/medchem.2023) (Score: 9)
 
-### [Paper Title](https://doi.org/10.1234/example.2023) (Score: 9)
-
-**DOI:** [10.1234/example.2023](https://doi.org/10.1234/example.2023)
+**DOI:** [10.1234/medchem.2023](https://doi.org/10.1234/medchem.2023)
 **PMID:** [12345678](https://pubmed.ncbi.nlm.nih.gov/12345678/)
-**Authors:** Smith et al., 2023
+**ChEMBL:** [CHEMBL1234567](https://www.ebi.ac.uk/chembl/document_report_card/CHEMBL1234567/)
 
 **Key Findings:**
-- IC50 values for 12 BTK inhibitors (Table 2)
-- Compound 7 shows >80-fold selectivity vs other kinases
-- Synthesis described in detail (Scheme 1, page 4)
+- IC50 values for 12 inhibitors (Table 2)
+- Compound 7: IC50 = 12 nM, >80-fold selectivity
+- Synthesis route (Scheme 1, page 4)
 
-**Data Location:**
-- Main data: Table 2 (page 7), Figure 3 (page 9)
-- Supplementary: SI Table S1 (full kinase panel)
+**Files:** PDF, supplementary data
+```
 
-**Files:**
-- PDF: `papers/10.1234_example.2023.pdf`
-- Supplementary: `papers/10.1234_example.2023_supp.zip`
+**Genomics example:**
+```markdown
+### [Transcriptomic analysis of disease progression](https://doi.org/10.1234/genomics.2023) (Score: 8)
 
----
+**DOI:** [10.1234/genomics.2023](https://doi.org/10.1234/genomics.2023)
+**PMID:** [23456789](https://pubmed.ncbi.nlm.nih.gov/23456789/)
+**Data:** [GEO: GSE12345](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE12345)
+
+**Key Findings:**
+- RNA-seq data: 50 samples, 3 conditions
+- 123 differentially expressed genes (FDR < 0.05)
+- Immune pathway enrichment (Figure 3)
+
+**Files:** PDF, supplementary tables with gene lists
+```
+
+**Computational methods example:**
+```markdown
+### [Fast sequence alignment with novel algorithm](https://doi.org/10.1234/compbio.2023) (Score: 9)
+
+**DOI:** [10.1234/compbio.2023](https://doi.org/10.1234/compbio.2023)
+**Code:** [github.com/user/tool](https://github.com/user/tool)
+
+**Key Findings:**
+- New alignment algorithm (pseudocode in Methods)
+- 10x faster than BLAST, 98% accuracy
+- Benchmark datasets available
+
+**Files:** PDF, code repository linked
 ```
 
 **IMPORTANT: Always make DOIs and PMIDs clickable links:**
@@ -272,15 +340,33 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 2. **Abstract score:** `Abstract score: X/10`
 3. **Decision:** What you're doing next (fetching full text / skipping / etc)
 
-**For relevant papers, report findings immediately:**
+**For relevant papers, report findings immediately (adapt to domain):**
+
+**Medicinal chemistry example:**
 ```
 📄 [15/127] Screening: "Selective BTK inhibitors..."
    Abstract score: 8 → Fetching full text...
    ✓ Found IC50 data for 8 compounds (Table 2)
    ✓ Selectivity data vs 50 kinases (Figure 3)
    → Added to SUMMARY.md
-   → Downloading PDF and supplementary files...
-   → Following 3 relevant citations...
+```
+
+**Genomics example:**
+```
+📄 [23/89] Screening: "Gene expression in liver disease..."
+   Abstract score: 9 → Fetching full text...
+   ✓ RNA-seq data available (GEO: GSE12345)
+   ✓ 123 DEGs identified (Table 1, FDR < 0.05)
+   → Added to SUMMARY.md
+```
+
+**Computational methods example:**
+```
+📄 [7/45] Screening: "Novel phylogenetic algorithm..."
+   Abstract score: 8 → Fetching full text...
+   ✓ Code available (github.com/user/tool)
+   ✓ Benchmark results (10x faster, Table 2)
+   → Added to SUMMARY.md
 ```
 
 **Update user every 5-10 papers with summary:**
