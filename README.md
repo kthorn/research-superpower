@@ -88,6 +88,7 @@ research-sessions/2025-10-11-btk-inhibitor-selectivity/
 - **checking-chembl** - ChEMBL database lookup for medicinal chemistry papers
 - **traversing-citations** - Smart citation following via Semantic Scholar
 - **finding-open-access-papers** - Unpaywall API for finding free full text
+- **cleaning-up-research-sessions** - Safe cleanup of intermediate files after research complete
 
 ## Philosophy
 

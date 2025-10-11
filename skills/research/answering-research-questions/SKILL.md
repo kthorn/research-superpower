@@ -465,6 +465,9 @@ with open('relevant-papers.json', 'w') as f:
 🔍 Quick access:
    - Open SUMMARY.md for complete findings and methodology
    - Use relevant-papers.json for programmatic access
+
+💡 Optional: Clean up intermediate files?
+   → Use cleaning-up-research-sessions skill to safely remove temporary files
 ```
 
 ## Workflow Checklist
@@ -596,7 +599,8 @@ Research session successful when:
 ## Next Steps
 
 After completing research:
-- User reviews SUMMARY.md
+- User reviews SUMMARY.md and relevant-papers.json
+- **Optional**: Run cleaning-up-research-sessions skill to remove intermediate files
 - May request deeper dive into specific papers
 - May request follow-up searches with refined keywords
-- May export findings to other formats
+- May archive or share research session folder

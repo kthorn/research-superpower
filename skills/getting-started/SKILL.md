@@ -34,6 +34,7 @@ Use these skills for **systematic literature reviews**:
 - **checking-chembl** - Check if medicinal chemistry papers have curated SAR data in ChEMBL
 - **traversing-citations** - Semantic Scholar citation network traversal
 - **finding-open-access-papers** - Unpaywall API to find free versions of paywalled papers
+- **cleaning-up-research-sessions** - Safe cleanup of intermediate files after research complete
 
 ## Basic Workflow
 
