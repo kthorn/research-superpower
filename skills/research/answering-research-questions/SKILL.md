@@ -189,6 +189,7 @@ For papers scoring ≥ 7:
 
 **When stopping (user says no or queue empty):**
 
+**Option A: Manual synthesis (small research sessions)**
 1. **Review SUMMARY.md** - Organize by relevance and topic
 2. **Extract key findings** - Group by data type
 3. **Add synthesis section:**
@@ -218,6 +219,27 @@ For papers scoring ≥ 7:
 
 4. **Update search progress stats**
 5. **List all files downloaded**
+
+**Option B: Script-based synthesis (large research sessions >50 papers)**
+
+For large research sessions, consider creating a synthesis script:
+
+**create `generate_summary.py`:**
+- Read `evaluated-papers.json` from helper scripts
+- Aggregate findings by priority and scaffold type
+- Generate comprehensive SUMMARY.md with:
+  - Executive summary with statistics
+  - Papers grouped by relevance score
+  - Key chemical scaffolds found
+  - Priority recommendations for next steps
+  - Methodology documentation
+- Include timestamps and reproducibility info
+
+**Benefits:**
+- Consistent formatting across sessions
+- Easy to regenerate as more papers added
+- Can customize grouping/filtering logic
+- Documents complete methodology
 
 **Final report:**
 ```
