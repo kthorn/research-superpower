@@ -63,8 +63,11 @@ or
 # Check if available in PMC
 curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=PMID[PMID]&retmode=json"
 
-# If found, fetch full text XML
+# If found, fetch full text XML via API
 curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=PMCID&rettype=full&retmode=xml"
+
+# Or fetch HTML directly (note: use pmc.ncbi.nlm.nih.gov, not www.ncbi.nlm.nih.gov/pmc)
+curl "https://pmc.ncbi.nlm.nih.gov/articles/PMCID/"
 ```
 
 **B. DOI resolution:**
