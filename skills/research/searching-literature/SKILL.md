@@ -141,10 +141,17 @@ Create list of paper objects:
 
 ## Error Handling
 
-**Rate limits:**
-- No API key: 3 requests/second
+**Rate limits (CRITICAL - shared across all processes/subagents):**
+- No API key: 3 requests/second (official limit)
 - With API key: 10 requests/second
-- Add 350ms delay between requests if no key
+- **Single agent/script:** Use 500ms delays (2 req/sec, safe margin)
+  - 350ms is theoretically sufficient but causes ~20% HTTP 429 errors in practice
+- **Multiple parallel subagents:** Use longer delays to share capacity
+  - 2 parallel: 1 second each (2 total req/sec)
+  - 3 parallel: 1.5 seconds each (2 total req/sec)
+  - 5 parallel: 2.5 seconds each (2 total req/sec)
+  - Formula: `delay_seconds = (num_parallel / rate_limit) + safety_margin`
+- **If you get HTTP 429 errors:** Wait 5 seconds, resume with doubled delays
 
 **Empty results:**
 - Try broader terms
@@ -181,7 +188,7 @@ After search completes:
 **Too broad:** 5000 results → Add AND terms, use field tags
 **Missing abstracts:** Use efetch instead of esummary for full abstract text
 **DOI not found:** Many older papers lack DOI - use PMID as fallback
-**Rate limiting:** Add delays between requests
+**Rate limiting:** Add 500ms delays (single agent) or longer (parallel subagents sharing rate limit)
 
 ## Next Steps
 

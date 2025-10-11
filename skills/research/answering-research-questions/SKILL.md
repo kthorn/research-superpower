@@ -66,7 +66,7 @@ mkdir -p "research-sessions/YYYY-MM-DD-description"/{papers,citations}
 
 **Initialize files:**
 
-**CRITICAL: Use ONLY these three files for tracking. Do NOT create custom files like "TOP_PRIORITY_PAPERS.md" or "FORWARD_CITATION_ANALYSIS.md".**
+**Core files (always create these):**
 
 **papers-reviewed.json:**
 ```json
@@ -89,6 +89,13 @@ mkdir -p "research-sessions/YYYY-MM-DD-description"/{papers,citations}
 ---
 
 ## Highly Relevant Papers (Score ≥ 8)
+
+Papers scored using `evaluating-paper-relevance` skill:
+- Score 0-10 based on: Keywords (0-3) + Data type (0-4) + Specificity (0-3)
+- Score ≥ 8: Highly relevant with significant data
+- Score 7: Relevant with useful data
+- Score 5-6: Possibly relevant
+- Score < 5: Not relevant
 
 (Papers will be added here as found)
 
@@ -125,6 +132,15 @@ Example format:
 ```
 
 **CRITICAL: Always use clickable markdown links for DOIs and PMIDs**
+
+**Auxiliary files (for large searches >100 papers):**
+
+See `evaluating-paper-relevance` skill for guidance on when to create:
+- **README.md** - Project overview, methodology, file inventory
+- **TOP_PRIORITY_PAPERS.md** - Curated priority list organized by tier
+- **evaluated-papers.json** - Rich structured data for programmatic access
+
+For small searches (<50 papers), stick to core files only. For large searches (>100 papers), auxiliary files add significant organizational value.
 
 ### Phase 3: Search Literature
 
@@ -302,7 +318,9 @@ For large research sessions, consider creating a synthesis script:
 - Shared `SUMMARY.md` (findings accumulation)
 - Shared `citation-graph.json` (relationship tracking)
 
-**CRITICAL: ALL findings MUST go into SUMMARY.md, ALL paper tracking MUST go into papers-reviewed.json. Do NOT create custom markdown files or text files.**
+**File organization:**
+- **Small searches (<50 papers):** Use ONLY papers-reviewed.json, SUMMARY.md, and citation-graph.json
+- **Large searches (>100 papers):** May add auxiliary files (README.md, TOP_PRIORITY_PAPERS.md, evaluated-papers.json) for better organization
 
 ## Error Handling
 
@@ -341,7 +359,7 @@ For large research sessions, consider creating a synthesis script:
 ## Common Mistakes
 
 **Not tracking all papers:** Only adding relevant papers to papers-reviewed.json → Add EVERY paper to prevent re-review, track complete history
-**Creating custom files:** Making TOP_PRIORITY_PAPERS.md, FORWARD_CITATION_ANALYSIS.md, etc. → ALL findings go in SUMMARY.md, ALL tracking goes in papers-reviewed.json
+**Creating unnecessary auxiliary files for small searches:** For <50 papers, stick to core files (papers-reviewed.json, SUMMARY.md, citation-graph.json). For large searches (>100 papers), auxiliary files like README.md and TOP_PRIORITY_PAPERS.md add value.
 **Silent work:** User can't see progress → Report EVERY paper, give updates every 10
 **Non-clickable identifiers:** Plain text DOIs/PMIDs → Always use markdown links
 **Jumping to evaluation without good search:** Too narrow results → Optimize search first

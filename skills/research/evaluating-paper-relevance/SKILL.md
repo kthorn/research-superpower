@@ -22,6 +22,30 @@ Use this skill when:
 - Screening papers one-by-one
 - Any research domain (medicinal chemistry, genomics, ecology, computational methods, etc.)
 
+## Choosing Your Approach
+
+**Small searches (<50 papers):**
+- Manual screening with progress reporting
+- Use papers-reviewed.json + SUMMARY.md only
+- No helper scripts needed
+- Report progress to user for every paper
+
+**Large searches (50-150 papers):**
+- Consider helper scripts (screen_papers.py + deep_dive_papers.py)
+- Use Progressive Enhancement Pattern (see Helper Scripts section)
+- Create README.md with methodology
+- May want TOP_PRIORITY_PAPERS.md for quick reference
+- Use richer JSON structure (evaluated-papers.json categorized by relevance)
+- Consider using subagent-driven-review skill for parallel screening
+
+**Very large searches (>150 papers):**
+- Definitely use helper scripts with Progressive Enhancement Pattern
+- Create full auxiliary documentation suite (README.md, TOP_PRIORITY_PAPERS.md)
+- Consider citation network analysis
+- Plan for multi-week timeline
+- Strongly consider subagent-driven-review skill for parallelization
+- May need multiple consolidation checkpoints
+
 ## Two-Stage Process
 
 ### Stage 1: Abstract Screening (Fast)
@@ -424,26 +448,37 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 **Key components:**
 1. **Fetch abstracts** - PubMed efetch with error handling
 2. **Score abstracts** - Implement scoring rubric (0-10)
-3. **Rate limiting** - 350ms delay between API calls
+3. **Rate limiting** - 500ms delay between API calls (or longer if running parallel subagents)
 4. **Save results** - JSON with scored papers categorized by relevance
 5. **Progress reporting** - Print status as it runs
 
-**Pattern - Two-script pipeline:**
+### Progressive Enhancement Pattern (Recommended for 50+ papers)
 
-**Script 1: Abstract screening** (`screen_papers.py`)
-- Fetch and score abstracts
-- Output: `evaluated-papers.json` with categorized papers
+**For large-scale screening, use two-script pattern:**
 
-**Script 2: Deep dive** (`deep_dive_papers.py`)
-- Read Script 1 results
+**Script 1: Abstract Screening** (`screen_papers.py`)
+- Batch fetch abstracts
+- Score using rubric (0-10)
+- Categorize by relevance
+- Output: `evaluated-papers.json` with basic metadata
+
+**Script 2: Deep Dive** (`deep_dive_papers.py`)
+- Read Script 1 output
 - Fetch full text for highly relevant papers (score ≥8)
-- Extract specific data (tables, figures, values, compound IDs)
-- Update `evaluated-papers.json` with detailed findings
+- Extract domain-specific data (measurements, protocols, datasets, etc.)
+- Update same JSON file with enhanced metadata
+
+**Benefits:**
+- **Can run steps independently** - Score abstracts once, re-run deep dive multiple times
+- **Resume if interrupted** - No need to re-fetch abstracts if deep dive fails
+- **Re-run deep dive without re-scoring abstracts** - Adjust extraction logic, keep scores
+- **Consistent and reproducible** - Same scoring logic applied to all papers
+- **Save API calls** - Abstract screening happens once, deep dive only on relevant papers
 
 **Script design:**
 - Parameterize keywords and data types for specific query
 - Progressive enhancement - add detail to same JSON file
-- Include rate limiting (350ms between API calls)
+- Include rate limiting (500ms between API calls for single script, longer if parallel)
 - Keep scripts with research session for reproducibility
 
 **When NOT to create helper script:**
@@ -455,7 +490,7 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 **Not tracking all papers:** Only adding relevant papers to papers-reviewed.json → Add EVERY paper regardless of score to prevent re-review
 **Skipping Unpaywall:** Hitting paywall and giving up → ALWAYS check Unpaywall first, many papers have free versions
-**Creating custom files:** Making evaluated-papers.json, priority-papers.txt, etc. → Use ONLY papers-reviewed.json and SUMMARY.md
+**Creating unnecessary files for small searches:** For <50 papers, use ONLY papers-reviewed.json and SUMMARY.md. For large searches (>100 papers), structured evaluated-papers.json and auxiliary files (README.md, TOP_PRIORITY_PAPERS.md) add significant value and should be used.
 **Too strict:** Skipping papers that mention data indirectly → Re-read abstract carefully
 **Too lenient:** Deep diving into tangentially related papers → Focus on specific data user needs
 **Missing supplementary data:** Many papers hide key data in SI → Always check for supplementary files
@@ -482,3 +517,68 @@ After evaluating paper:
 - If score ≥ 7: Call `skills/research/traversing-citations`
 - Continue to next paper in search results
 - Check if reached 50 papers or 5 minutes → ask user to continue or stop
+
+## Auxiliary Files (for large searches >100 papers)
+
+### README.md Template
+
+**Use this structure for research projects with 100+ papers:**
+
+1. **Project Overview**
+   - Query description
+   - Target molecules/topics
+   - Date completed
+
+2. **Quick Start Guide**
+   - Where to start reading
+   - Priority lists
+
+3. **File Inventory**
+   - Description of each file
+   - What each is used for
+
+4. **Key Findings Summary**
+   - Statistics
+   - Top findings
+   - Coverage by category
+
+5. **Methodology**
+   - Scoring rubric
+   - Decision rules
+   - Data sources
+
+6. **Next Steps**
+   - Recommended actions
+   - Priority order
+
+### TOP_PRIORITY_PAPERS.md Template
+
+**For datasets with >50 relevant papers, create curated priority list:**
+
+- Organized by tier (Tier 1: Must-read, Tier 2: High-value, etc.)
+- Include score, DOI, key findings summary
+- Note full text availability
+- Suggest reading order
+
+**Example structure:**
+```markdown
+# Top Priority Papers
+
+## Tier 1: Must-Read (Score 10)
+
+### [Paper Title](https://doi.org/10.xxxx/yyyy) (Score: 10)
+
+**DOI:** [10.xxxx/yyyy](https://doi.org/10.xxxx/yyyy)
+**PMID:** [12345678](https://pubmed.ncbi.nlm.nih.gov/12345678/)
+**Full text:** ✓ PMC12345678
+
+**Key Findings:**
+- Finding 1
+- Finding 2
+
+---
+
+## Tier 2: High-Value (Score 8-9)
+
+[Additional papers organized by priority...]
+```
