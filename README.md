@@ -83,6 +83,15 @@ research-sessions/2025-10-11-btk-inhibitor-selectivity/
 - Internet connection (for PubMed and Semantic Scholar APIs)
 - Optional: API keys for higher rate limits (free tier works for most use cases)
 
+## Reducing Command Prompts
+
+When Claude runs API calls (curl commands), you may see approval prompts. To reduce these:
+
+1. **Per-directory approval**: When prompted, choose option 2: "Yes, and don't ask again for similar commands in this directory"
+2. **This applies to**: All research API calls (PubMed, Semantic Scholar, Unpaywall) in your research-sessions folders
+
+This makes research sessions flow more smoothly without constant interruptions.
+
 ## API Information
 
 **PubMed/E-utilities:**
