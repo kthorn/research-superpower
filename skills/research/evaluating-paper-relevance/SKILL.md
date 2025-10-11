@@ -37,7 +37,7 @@ Use this skill when:
 - Score 5-6: Note in summary as "possibly relevant" but skip for now
 - Score ≥ 7: Proceed to Stage 2 (deep dive)
 
-**Output to terminal:**
+**IMPORTANT: Report to user for EVERY paper:**
 ```
 📄 [N/Total] Screening: "Paper Title"
    Abstract score: 8 → Fetching full text...
@@ -49,6 +49,8 @@ or
 📄 [N/Total] Screening: "Paper Title"
    Abstract score: 4 → Skipping (insufficient relevance)
 ```
+
+**Never screen silently** - user needs to see progress happening
 
 ### Stage 2: Deep Dive (Thorough)
 
@@ -190,7 +192,14 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 ## Progress Reporting
 
-**Report to user as you work:**
+**CRITICAL: Report to user as you work - never work silently!**
+
+**For every paper, report:**
+1. **Start screening:** `📄 [N/Total] Screening: "Title..."`
+2. **Abstract score:** `Abstract score: X/10`
+3. **Decision:** What you're doing next (fetching full text / skipping / etc)
+
+**For relevant papers, report findings immediately:**
 ```
 📄 [15/127] Screening: "Selective BTK inhibitors..."
    Abstract score: 8 → Fetching full text...
@@ -200,6 +209,16 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
    → Downloading PDF and supplementary files...
    → Following 3 relevant citations...
 ```
+
+**Update user every 5-10 papers with summary:**
+```
+📊 Progress: Reviewed 30/127 papers
+   - Highly relevant: 3
+   - Relevant: 5
+   - Currently screening paper 31...
+```
+
+**Why this matters:** User needs to see work happening and provide feedback/corrections early
 
 ## Integration with Other Skills
 
@@ -268,7 +287,8 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 **Too strict:** Skipping papers that mention data indirectly → Re-read abstract carefully
 **Too lenient:** Deep diving into tangentially related papers → Focus on specific data user needs
 **Missing supplementary data:** Many papers hide key data in SI → Always check for supplementary files
-**Not tracking progress:** User loses context → Report findings as you go
+**Silent screening:** User can't see progress → Report EVERY paper as you screen it
+**No periodic summaries:** User loses big picture → Update every 5-10 papers
 **Re-reviewing papers:** Wastes time → Always check papers-reviewed.json first
 **Not using helper scripts:** Manually screening 100+ papers → Consider batch script
 

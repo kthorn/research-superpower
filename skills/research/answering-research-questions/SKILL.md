@@ -139,13 +139,21 @@ For each paper:
 6. Update papers-reviewed.json
 7. If score ≥ 7: proceed to Phase 5 for this paper
 
-**Report progress:**
+**Report progress for EVERY paper:**
 ```
 📄 [15/100] Screening: "Paper Title"
    Abstract score: 8 → Fetching full text...
    ✓ Found IC50 data for 8 compounds
    → Added to SUMMARY.md
+
+📄 [16/100] Screening: "Another Paper"
+   Abstract score: 3 → Skipping (not relevant)
+
+📄 [17/100] Screening: "Third Paper"
+   Abstract score: 7 → Relevant, adding to queue...
 ```
+
+**Every 10 papers, give summary update**
 
 ### Phase 5: Traverse Citations
 
@@ -320,25 +328,48 @@ For large research sessions, consider creating a synthesis script:
 
 ## Common Mistakes
 
+**Silent work:** User can't see progress → Report EVERY paper, give updates every 10
 **Jumping to evaluation without good search:** Too narrow results → Optimize search first
 **Not tracking papers:** Re-reviewing same papers → Always use papers-reviewed.json
 **Following all citations:** Exponential explosion → Filter before traversing
 **No checkpoints:** User loses context → Report and ask every 50 papers
 **Poor synthesis:** Just list papers → Group by data type, extract key findings
+**Batch reporting:** Reporting 20 papers at once → Report each one as you go
 
-## User Communication
+## User Communication (CRITICAL)
+
+**NEVER work silently! User needs continuous feedback.**
+
+**Report frequency:**
+- **Every paper:** Brief status as you screen (`📄 [N/Total] Title... Score: X`)
+- **Every 5-10 papers:** Progress summary with counts
+- **Every finding:** Immediately report what data you found
+- **Every decision point:** Ask before changing direction
 
 **Be specific in progress reports:**
 - ✅ "Found IC50 = 12 nM for compound 7 (Table 2)"
 - ❌ "Found data"
+- ✅ "Screening paper 25/127: Not relevant (score 3)"
+- ❌ Silently skip papers
 
 **Ask for clarification when needed:**
 - ✅ "Are you looking for in vitro or in vivo IC50 values?"
 - ❌ Assume and potentially waste time
 
-**Report blockers:**
+**Report blockers immediately:**
 - ✅ "⚠️ Paper behind paywall - evaluating from abstract only"
 - ❌ Silently skip without mentioning
+
+**Periodic summaries (every 10-15 papers):**
+```
+📊 Progress update:
+   - Reviewed: 30/127 papers
+   - Highly relevant: 3 (scores 8-10)
+   - Relevant: 5 (score 7)
+   - Currently: Screening paper 31...
+```
+
+**Why:** User can course-correct early, knows work is happening, can stop if needed
 
 ## Success Criteria
 
