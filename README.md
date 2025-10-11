@@ -85,12 +85,30 @@ research-sessions/2025-10-11-btk-inhibitor-selectivity/
 
 ## Reducing Command Prompts
 
-When Claude runs API calls (curl commands), you may see approval prompts. To reduce these:
+When Claude runs API calls (curl commands), you may see approval prompts. To eliminate these for research sessions:
 
-1. **Per-directory approval**: When prompted, choose option 2: "Yes, and don't ask again for similar commands in this directory"
-2. **This applies to**: All research API calls (PubMed, Semantic Scholar, Unpaywall) in your research-sessions folders
+### Option 1: Pre-configure permissions (Recommended)
 
-This makes research sessions flow more smoothly without constant interruptions.
+Copy the template permissions file to your research project:
+
+```bash
+# In your research project directory (e.g., research-sessions/YYYY-MM-DD-query/)
+mkdir -p .claude
+cp ~/.config/research-superpowers/.claude/settings.local.json.template .claude/settings.local.json
+```
+
+This pre-approves:
+- All PubMed/NCBI API calls
+- All Semantic Scholar API calls
+- All Unpaywall API calls
+- DOI resolution calls
+- Basic file operations
+
+### Option 2: Per-command approval
+
+When prompted, choose option 2: "Yes, and don't ask again for similar commands in this directory"
+
+**Note:** If this doesn't work (keeps prompting), use Option 1 instead. Claude Code may add specific commands instead of patterns.
 
 ## API Information
 

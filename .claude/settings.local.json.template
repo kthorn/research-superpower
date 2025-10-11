@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/kurtt/.config/research-superpowers/**)",
+      "Bash(mkdir:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(tree:*)",
+      "WebFetch(domain:pubmed.ncbi.nlm.nih.gov)",
+      "WebFetch(domain:www.ncbi.nlm.nih.gov)",
+      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
+      "Bash(curl*https://eutils.ncbi.nlm.nih.gov/*)",
+      "Bash(curl*https://api.semanticscholar.org/*)",
+      "Bash(curl*https://api.unpaywall.org/*)",
+      "Bash(curl*https://pmc.ncbi.nlm.nih.gov/*)",
+      "Bash(curl*https://doi.org/*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
