@@ -218,6 +218,38 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 | 7-8 | Relevant | Deep dive, extract data, add to summary |
 | 9-10 | Highly relevant | Deep dive, extract data, follow citations, highlight in summary |
 
+## Helper Scripts (Optional)
+
+**When screening many papers (>20), consider creating a helper script:**
+
+**Benefits:**
+- Batch processing with rate limiting
+- Consistent scoring logic
+- Save intermediate results
+- Resume after interruption
+
+**Create in research session folder:**
+```python
+# research-sessions/YYYY-MM-DD-query/screen_papers.py
+```
+
+**Key components:**
+1. **Fetch abstracts** - PubMed efetch with error handling
+2. **Score abstracts** - Implement scoring rubric (0-10)
+3. **Rate limiting** - 350ms delay between API calls
+4. **Save results** - JSON with scored papers categorized by relevance
+5. **Progress reporting** - Print status as it runs
+
+**Pattern:**
+- Parameterize keywords and data types for the specific query
+- Output JSON that can be read for Stage 2 (deep dive)
+- Keep script with research session for reproducibility
+
+**When NOT to create helper script:**
+- Few papers (<20)
+- One-off quick searches
+- Manual screening is faster
+
 ## Common Mistakes
 
 **Too strict:** Skipping papers that mention data indirectly → Re-read abstract carefully
@@ -225,6 +257,7 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 **Missing supplementary data:** Many papers hide key data in SI → Always check for supplementary files
 **Not tracking progress:** User loses context → Report findings as you go
 **Re-reviewing papers:** Wastes time → Always check papers-reviewed.json first
+**Not using helper scripts:** Manually screening 100+ papers → Consider batch script
 
 ## Quick Reference
 
