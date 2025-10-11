@@ -196,7 +196,11 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 **CRITICAL: Use ONLY papers-reviewed.json and SUMMARY.md. Do NOT create custom tracking files.**
 
+**CRITICAL: Add EVERY paper to papers-reviewed.json, regardless of score. This prevents re-reviewing papers and tracks complete search history.**
+
 **Add to papers-reviewed.json:**
+
+**For relevant papers (score ≥7):**
 ```json
 {
   "10.1234/example.2023": {
@@ -206,10 +210,27 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
     "source": "pubmed_search",
     "timestamp": "2025-10-11T10:30:00Z",
     "found_data": ["IC50 values", "synthesis methods"],
-    "has_full_text": true
+    "has_full_text": true,
+    "chembl_id": "CHEMBL1234567"
   }
 }
 ```
+
+**For not-relevant papers (score <7):**
+```json
+{
+  "10.1234/another.2023": {
+    "pmid": "12345679",
+    "status": "not_relevant",
+    "score": 4,
+    "source": "pubmed_search",
+    "timestamp": "2025-10-11T10:31:00Z",
+    "reason": "no activity data, review paper"
+  }
+}
+```
+
+**Always add papers even if skipped** - this prevents re-processing and documents what was already checked.
 
 **Add to SUMMARY.md:**
 ```markdown
@@ -346,6 +367,7 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 ## Common Mistakes
 
+**Not tracking all papers:** Only adding relevant papers to papers-reviewed.json → Add EVERY paper regardless of score to prevent re-review
 **Skipping Unpaywall:** Hitting paywall and giving up → ALWAYS check Unpaywall first, many papers have free versions
 **Creating custom files:** Making evaluated-papers.json, priority-papers.txt, etc. → Use ONLY papers-reviewed.json and SUMMARY.md
 **Too strict:** Skipping papers that mention data indirectly → Re-read abstract carefully

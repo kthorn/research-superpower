@@ -145,8 +145,10 @@ For each paper:
 3. If score ≥ 7: Stage 2 deep dive
 4. Extract findings to SUMMARY.md
 5. Download PDF and supplementary if available
-6. Update papers-reviewed.json
+6. **Update papers-reviewed.json (for ALL papers, even low-scoring ones)**
 7. If score ≥ 7: proceed to Phase 5 for this paper
+
+**CRITICAL: Add every paper to papers-reviewed.json regardless of score. This prevents re-review and tracks complete search history.**
 
 **Report progress for EVERY paper:**
 ```
@@ -338,6 +340,7 @@ For large research sessions, consider creating a synthesis script:
 
 ## Common Mistakes
 
+**Not tracking all papers:** Only adding relevant papers to papers-reviewed.json → Add EVERY paper to prevent re-review, track complete history
 **Creating custom files:** Making TOP_PRIORITY_PAPERS.md, FORWARD_CITATION_ANALYSIS.md, etc. → ALL findings go in SUMMARY.md, ALL tracking goes in papers-reviewed.json
 **Silent work:** User can't see progress → Report EVERY paper, give updates every 10
 **Non-clickable identifiers:** Plain text DOIs/PMIDs → Always use markdown links

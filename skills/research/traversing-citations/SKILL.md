@@ -149,6 +149,8 @@ else:
     add to queue
 ```
 
+**CRITICAL: After evaluating any paper from citation traversal, add it to papers-reviewed.json regardless of score. This prevents re-processing the same paper from multiple sources.**
+
 **Track citation relationship** in citations/citation-graph.json:
 ```json
 {
@@ -253,10 +255,11 @@ Before adding citation to queue:
 
 ## Common Mistakes
 
+**Not tracking all evaluated papers:** Only adding relevant papers to papers-reviewed.json → Add EVERY paper after evaluation to prevent re-review
 **Creating custom analysis files:** Making forward_citation_pmids.txt, CITATION_ANALYSIS.md, etc. → Use ONLY citation-graph.json and SUMMARY.md
 **Following all citations:** Exponential explosion → Filter before adding to queue
 **Ignoring context:** Citation might be tangential → Read context strings
-**Not deduplicating:** Re-process same papers → Always check papers-reviewed.json
+**Not deduplicating:** Re-process same papers → Always check papers-reviewed.json before and after evaluation
 **Too deep:** Following 5+ levels → Limit to 2 levels, check with user
 **Missing forward citations:** Only checking references → Use both backward and forward
 **No rate limiting awareness:** API blocks you → Add delays, handle 429 errors
