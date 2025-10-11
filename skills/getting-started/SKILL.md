@@ -1,42 +1,51 @@
 ---
 name: Getting Started with Research Superpowers
-description: Introduction to research skills - literature search, paper evaluation, citation traversal workflows
-when_to_use: At start of each Claude Code session. When user asks research questions. When searching scientific literature. When analyzing papers or citations.
-version: 1.0.0
+description: Introduction to literature search & review skills - systematic paper finding, screening, extraction, and citation traversal
+when_to_use: At start of each Claude Code session. When user asks literature search questions. When searching scientific literature. When reviewing papers or citations.
+version: 1.1.0
 ---
 
 # Getting Started with Research Superpowers
 
-Research Superpowers gives Claude Code systematic workflows for scientific literature research.
+Research Superpowers gives Claude Code systematic workflows for **literature searching and review**.
+
+**Focus:** Finding, screening, and extracting data from published papers. NOT for analyzing experimental data or designing experiments.
 
 ## What You Can Do
 
+Use these skills for **systematic literature reviews**:
+
 - **Search literature** - PubMed and Semantic Scholar integration
-- **Evaluate papers** - Two-stage screening (abstract → deep dive)
-- **Extract data** - Find specific methods, results, data from papers
+- **Build screening rubrics** - Define and test relevance criteria collaboratively
+- **Screen papers** - Two-stage screening (abstract → deep dive) with scoring
+- **Extract data** - Find specific methods, results, measurements from papers
 - **Traverse citations** - Smart backward/forward citation following
-- **Track findings** - Organized folders with summaries and papers
+- **Large-scale screening** - Parallel subagent processing for 50+ papers
+- **Track findings** - Organized research sessions with summaries, PDFs, and deduplication
 
 ## Available Skills
 
-**Research Skills** (`skills/research/`)
-- **answering-research-questions** - Main orchestration workflow for research queries
+**Literature Search & Review Skills** (`skills/research/`)
+- **answering-research-questions** - Main orchestration workflow (search → screen → extract → synthesize)
+- **building-screening-rubrics** - Collaborative rubric design with test-driven refinement
 - **searching-literature** - PubMed search with keyword optimization
-- **evaluating-paper-relevance** - Abstract screening + full text analysis
+- **evaluating-paper-relevance** - Two-stage screening (abstract → deep dive)
+- **subagent-driven-review** - Parallel screening for large searches (50+ papers)
 - **checking-chembl** - Check if medicinal chemistry papers have curated SAR data in ChEMBL
 - **traversing-citations** - Semantic Scholar citation network traversal
 - **finding-open-access-papers** - Unpaywall API to find free versions of paywalled papers
 
 ## Basic Workflow
 
-When user asks a research question:
+When user asks a **literature search question**:
 
 1. **Read answering-research-questions skill** - Main orchestration
 2. **Announce**: "I'm using the Answering Research Questions skill"
 3. **Parse query** - Extract keywords, data types, constraints
 4. **Create research folder** - Propose name, initialize tracking
-5. **Search → Evaluate → Traverse** - Follow the workflow
-6. **Check in regularly** - Every 50 papers or 5 minutes
+5. **Optional: Build rubric** - For large searches (50+ papers), use building-screening-rubrics skill
+6. **Search → Screen → Extract → Traverse** - Follow the workflow
+7. **Check in regularly** - Every 10 papers, checkpoint every 50
 
 ## Research Session Folders
 
@@ -52,11 +61,16 @@ research-sessions/YYYY-MM-DD-query-description/
 
 ## Core Principles
 
-- **Precision over breadth** - Find papers with specific data, not just topical matches
-- **Smart citation following** - Only traverse relevant citations
-- **Deduplicate aggressively** - Track all reviewed papers by DOI
-- **Report progress** - Update user as work proceeds
-- **Checkpoint frequently** - Ask to continue or stop
+For **systematic literature review**:
+
+- **Precision over breadth** - Find papers with specific data you need, not just topical matches
+- **Test-driven screening** - Build and validate rubrics before bulk processing
+- **Smart citation following** - Only traverse relevant citations to avoid exponential explosion
+- **Deduplicate aggressively** - Track ALL reviewed papers by DOI (even non-relevant)
+- **Cache abstracts** - Save for re-screening when rubrics change
+- **Report progress** - Update user every 10 papers as work proceeds
+- **Checkpoint frequently** - Ask to continue or stop every 50 papers
+- **Reproducible** - Save rubrics, queries, and methodology with research sessions
 
 ## API Information
 

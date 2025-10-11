@@ -1,34 +1,46 @@
-# Research Superpowers
+# Research Superpowers: Literature Search & Review
 
-Give Claude Code superpowers for scientific research. Search literature, evaluate papers, traverse citation networks, and answer research questions systematically.
+Give Claude Code superpowers for **systematic literature searching and review**. Search PubMed, screen papers, extract data, traverse citations, and synthesize findings.
+
+**Focus:** Finding and reviewing scientific papers, not lab work or data analysis.
 
 ## What You Get
 
+A complete toolkit for **systematic literature reviews**:
+
 - **Literature Search** - PubMed and Semantic Scholar integration
-- **Smart Paper Evaluation** - Abstract screening + deep dive for relevant data
+- **Smart Paper Screening** - Abstract scoring + deep dive for relevant data extraction
+- **Screening Rubrics** - Build and test custom relevance criteria collaboratively
 - **ChEMBL Integration** - Check if medicinal chemistry papers have curated SAR data (~99k papers)
 - **Open Access Finding** - Unpaywall API to find free versions of paywalled papers
 - **Citation Traversal** - Intelligent backward and forward citation following
-- **Research Orchestration** - End-to-end workflow for answering research questions
+- **Large-Scale Screening** - Parallel subagent processing for 50+ papers
+- **Research Orchestration** - End-to-end workflow from query to synthesized findings
 
 ## Quick Start
 
 ```bash
 # Clone to your config directory
-git clone https://github.com/yourname/research-superpowers ~/.config/research-superpowers
+git clone https://github.com/kthorn/research-superpower ~/.config/research-superpowers
 
-# Start Claude Code and tell it about your research question
-# Example: "Find data on BTK inhibitor selectivity against other kinases"
+# Start Claude Code and tell it your literature search question
+# Example: "Find papers on BTK inhibitor selectivity with IC50 data"
+# Example: "Review literature on CRISPR gene editing in cardiomyocytes"
+# Example: "What's known about MmpL3 inhibitors for tuberculosis?"
 ```
 
-## How It Works
+**Note:** These skills help you **find and review papers**. For analyzing experimental data or designing experiments, you'll need other tools.
 
-1. **Parse your research question** - Extract keywords, data types, constraints
-2. **Search PubMed** - Find relevant papers
-3. **Screen abstracts** - Score papers for relevance (0-10)
-4. **Deep dive on promising papers** - Extract specific data and methods
-5. **Traverse citations** - Follow relevant references and citing papers (via Semantic Scholar)
-6. **Track everything** - Maintain folder with findings, papers, and deduplication
+## How It Works (Literature Review Workflow)
+
+1. **Parse your literature question** - Extract keywords, data types, constraints
+2. **Build screening rubric** - Define what makes papers relevant (optional, for large searches)
+3. **Search PubMed** - Find candidate papers
+4. **Screen abstracts** - Score papers for relevance (0-10)
+5. **Deep dive on promising papers** - Fetch full text, extract specific data and methods
+6. **Traverse citations** - Follow relevant references and citing papers (via Semantic Scholar)
+7. **Synthesize findings** - Organize results in SUMMARY.md with structured extraction
+8. **Track everything** - Maintain research session folder with findings, PDFs, and deduplication
 
 ## Project Structure
 
@@ -66,21 +78,29 @@ research-sessions/2025-10-11-btk-inhibitor-selectivity/
 
 ## Skills Library
 
-### Research Skills
+### Literature Search & Review Skills
 
-- **answering-research-questions** - Main orchestration workflow
-- **searching-literature** - PubMed API integration
-- **evaluating-paper-relevance** - Two-stage relevance filtering
+- **answering-research-questions** - Main orchestration workflow (search → screen → extract → synthesize)
+- **building-screening-rubrics** - Collaborative rubric design with test-driven refinement
+- **searching-literature** - PubMed API integration with query optimization
+- **evaluating-paper-relevance** - Two-stage relevance filtering (abstract + deep dive)
+- **subagent-driven-review** - Parallel screening for large searches (50+ papers)
 - **checking-chembl** - ChEMBL database lookup for medicinal chemistry papers
 - **traversing-citations** - Smart citation following via Semantic Scholar
 - **finding-open-access-papers** - Unpaywall API for finding free full text
 
 ## Philosophy
 
-- **Precision over breadth** - Find papers with specific data, not just topically related
+These skills focus on **systematic literature searching and review**:
+
+- **Precision over breadth** - Find papers with specific data you need, not just topically related
+- **Test-driven screening** - Build and validate relevance rubrics before bulk processing
 - **Smart traversal** - Only follow relevant citations to avoid exponential explosion
-- **Track everything** - Deduplicate and organize findings
-- **Check in regularly** - Every 50 papers or 5 minutes
+- **Track everything** - Deduplicate papers, cache abstracts for re-screening, maintain provenance
+- **Check in regularly** - Report progress every 10 papers, checkpoint every 50
+- **Reproducible** - Save rubrics, queries, and methodology with each research session
+
+**What this is NOT:** These skills don't analyze experimental data, design experiments, or perform statistical analysis. They help you **find and review published literature**.
 
 ## Requirements
 

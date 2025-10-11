@@ -291,6 +291,182 @@ For large research sessions, consider creating a synthesis script:
    - papers-reviewed.json (complete tracking)
 ```
 
+### Phase 8: Final Consolidation
+
+**CRITICAL: Always consolidate findings at the end**
+
+#### 1. Create relevant-papers.json
+
+**Filter papers-reviewed.json to extract only relevant papers (score ≥ 7):**
+
+```python
+# Read papers-reviewed.json
+with open('papers-reviewed.json') as f:
+    all_papers = json.load(f)
+
+# Filter for relevant papers (score >= 7)
+relevant_papers = {
+    doi: data for doi, data in all_papers.items()
+    if data.get('score', 0) >= 7
+}
+
+# Save to relevant-papers.json
+with open('relevant-papers.json', 'w') as f:
+    json.dump(relevant_papers, f, indent=2)
+```
+
+**Format:**
+```json
+{
+  "10.1234/example1.2023": {
+    "pmid": "12345678",
+    "title": "Paper title",
+    "status": "highly_relevant",
+    "score": 9,
+    "source": "pubmed_search",
+    "timestamp": "2025-10-11T16:00:00Z",
+    "found_data": ["IC50 values", "synthesis methods"],
+    "chembl_id": "CHEMBL1234567"
+  },
+  "10.1234/example2.2023": {
+    "pmid": "23456789",
+    "title": "Another paper",
+    "status": "relevant",
+    "score": 7,
+    "source": "forward_citation",
+    "timestamp": "2025-10-11T16:15:00Z",
+    "found_data": ["MIC data"]
+  }
+}
+```
+
+#### 2. Enhance SUMMARY.md with Methodology Section
+
+**Add these sections to the TOP of existing SUMMARY.md (before paper listings):**
+
+```markdown
+# Research Query: [User's question]
+
+**Date:** 2025-10-11
+**Duration:** 2h 15m
+**Status:** Complete
+
+---
+
+## Search Strategy
+
+**Keywords:** BTK, Bruton tyrosine kinase, inhibitor, selectivity, off-target, kinase panel, IC50
+**Data types sought:** IC50 values, selectivity data, kinase panel screening
+**Constraints:** None (open date range)
+
+**PubMed Query:**
+```
+("BTK" OR "Bruton tyrosine kinase") AND (inhibitor OR "kinase inhibitor") AND (selectivity OR "off-target")
+```
+
+---
+
+## Screening Methodology
+
+**Rubric:** Abstract scoring (0-10)
+- Key terms: +3 pts each (or Keywords 0-3, Data type 0-4, Specificity 0-3 if using old rubric)
+- Relevant terms: +1 pt each
+- Threshold: ≥7 = relevant
+
+**Sources:**
+- Initial PubMed search
+- Forward/backward citations via Semantic Scholar
+
+---
+
+## Results Statistics
+
+**Papers Screened:**
+- Total reviewed: 127 papers
+- Highly relevant (≥8): 12 papers
+- Relevant (7): 18 papers
+- Possibly relevant (5-6): 23 papers
+- Not relevant (<5): 74 papers
+
+**Data Extracted:**
+- IC50 values: 45 compounds across 12 papers
+- Selectivity data: 8 papers with kinase panel screening
+- Full text obtained: 18/30 relevant papers (60%)
+
+**Citation Traversal:**
+- Papers with citations followed: 7
+- References screened: 45 papers
+- Citing papers screened: 38 papers
+- Relevant papers found via citations: 8 papers
+
+---
+
+## Key Findings Summary
+
+### IC50 Values for BTK Inhibitors
+- Ibrutinib: 0.5 nM (Smith et al., 2023)
+- Acalabrutinib: 3 nM (Doe et al., 2024)
+- [Additional findings synthesized from papers below]
+
+### Selectivity Patterns
+- Most inhibitors show >50-fold selectivity vs other kinases
+- Common off-targets: TEC, BMX (other TEC family kinases)
+
+### Gaps Identified
+- Limited data on selectivity vs JAK/SYK
+- Few papers on resistance mechanisms
+- No in vivo selectivity data found
+
+---
+
+## File Inventory
+
+- `SUMMARY.md` - This file (methodology + findings)
+- `relevant-papers.json` - 30 relevant papers (score ≥7)
+- `papers-reviewed.json` - All 127 papers screened
+- `papers/` - 18 PDFs + 5 supplementary files
+- `citations/citation-graph.json` - Citation relationships
+
+---
+
+## Reproducibility
+
+**To reproduce:**
+1. Use PubMed query above
+2. Apply screening rubric (threshold ≥7)
+3. Follow citations from highly relevant papers (≥8)
+4. Check Unpaywall for paywalled papers
+
+**Software:** Research Superpowers skills v2025-10-11
+
+---
+
+[Existing paper listings follow below...]
+
+## Highly Relevant Papers (Score ≥ 8)
+
+### [Paper Title]...
+```
+
+**Report to user:**
+```
+✅ Research session complete!
+
+📄 Consolidation complete:
+   1. SUMMARY.md - Enhanced with methodology, statistics, and findings
+   2. relevant-papers.json - 30 relevant papers (score ≥7) in JSON format
+
+📁 All files in: research-sessions/2025-10-11-btk-inhibitor-selectivity/
+   - SUMMARY.md (complete: methodology + paper-by-paper findings)
+   - relevant-papers.json (30 relevant papers for programmatic access)
+   - papers-reviewed.json (127 total papers screened)
+   - papers/ (18 PDFs)
+
+🔍 Quick access:
+   - Open SUMMARY.md for complete findings and methodology
+   - Use relevant-papers.json for programmatic access
+```
+
 ## Workflow Checklist
 
 **Use TodoWrite to track these steps:**
@@ -303,7 +479,8 @@ For large research sessions, consider creating a synthesis script:
 - [ ] For relevant papers (≥7): traverse citations using traversing-citations skill
 - [ ] Report progress regularly
 - [ ] Checkpoint every 50 papers or 5 minutes
-- [ ] When done: synthesize findings in SUMMARY.md
+- [ ] When done: synthesize findings and enhance SUMMARY.md with methodology
+- [ ] Create relevant-papers.json (filtered JSON for programmatic access)
 - [ ] Final report with stats and file locations
 
 ## Integration Points
@@ -319,7 +496,8 @@ For large research sessions, consider creating a synthesis script:
 - Shared `citation-graph.json` (relationship tracking)
 
 **File organization:**
-- **Small searches (<50 papers):** Use ONLY papers-reviewed.json, SUMMARY.md, and citation-graph.json
+- **Small searches (<50 papers):** Core files only (papers-reviewed.json, SUMMARY.md, citation-graph.json)
+- **All searches:** Create relevant-papers.json at end; enhance SUMMARY.md with methodology
 - **Large searches (>100 papers):** May add auxiliary files (README.md, TOP_PRIORITY_PAPERS.md, evaluated-papers.json) for better organization
 
 ## Error Handling
@@ -354,7 +532,8 @@ For large research sessions, consider creating a synthesis script:
 | Search | searching-literature | List of papers with metadata |
 | Evaluate | evaluating-paper-relevance | Scored papers, extracted findings |
 | Traverse | traversing-citations | Additional papers from citations |
-| Synthesize | (built-in) | Final SUMMARY.md with key findings |
+| Synthesize | (built-in) | Enhanced SUMMARY.md with methodology + findings |
+| Consolidate | (built-in) | relevant-papers.json (filtered to score ≥7) |
 
 ## Common Mistakes
 
