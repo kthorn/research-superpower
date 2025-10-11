@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Find skills by pattern, display with descriptions
+
+set -euo pipefail
+
+# Get the script directory and project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+SKILLS_DIR="$PROJECT_ROOT/skills"
+
+# Usage message
+usage() {
+    cat <<EOF
+Usage: find-skills [PATTERN]
+
+Search for skills matching PATTERN (grep-style regex).
+Without PATTERN, lists all skills.
+
+Examples:
+  find-skills                    # List all skills
+  find-skills literature         # Find skills about literature
+  find-skills 'cite|ref'         # Find skills about citations or references
+
+Output format:
+  skills/path/skill-name - One-line description
+EOF
+    exit 0
+}
+
+# Show usage if --help or -h
+if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
+    usage
+fi
+
+PATTERN="${1:-}"
+
+# Find all SKILL.md files
+find "$SKILLS_DIR" -name "SKILL.md" -type f | sort | while read -r skill_file; do
+    # Get relative path from skills directory
+    rel_path="${skill_file#$SKILLS_DIR/}"
+    # Remove /SKILL.md suffix
+    skill_path="${rel_path%/SKILL.md}"
+
+    # Extract description from YAML frontmatter
+    # Look for "description:" line between "---" markers
+    description=$(awk '
+        /^---$/ { in_front++; next }
+        in_front == 1 && /^description:/ {
+            sub(/^description: */, "");
+            print;
+            exit
+        }
+    ' "$skill_file")
+
+    # If no description found, use placeholder
+    if [[ -z "$description" ]]; then
+        description="(no description)"
+    fi
+
+    # Build output line
+    output="skills/$skill_path - $description"
+
+    # If pattern provided, filter
+    if [[ -n "$PATTERN" ]]; then
+        if echo "$output" | grep -iE "$PATTERN" > /dev/null; then
+            echo "$output"
+        fi
+    else
+        echo "$output"
+    fi
+done
+
+# Print summary line at top
+echo "skills/One-line summary of what this does"
