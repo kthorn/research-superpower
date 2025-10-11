@@ -6,6 +6,7 @@ Give Claude Code superpowers for scientific research. Search literature, evaluat
 
 - **Literature Search** - PubMed and Semantic Scholar integration
 - **Smart Paper Evaluation** - Abstract screening + deep dive for relevant data
+- **Open Access Finding** - Unpaywall API to find free versions of paywalled papers
 - **Citation Traversal** - Intelligent backward and forward citation following
 - **Research Orchestration** - End-to-end workflow for answering research questions
 
@@ -92,6 +93,11 @@ research-sessions/2025-10-11-btk-inhibitor-selectivity/
 - Free tier: 100 requests per 5 minutes
 - API key (free): 1000 requests per 5 minutes
 - [Get API key](https://www.semanticscholar.org/product/api#api-key)
+
+**Unpaywall:**
+- Free: 100,000 requests per day
+- No API key required (just provide email)
+- [Learn more](https://unpaywall.org/products/api)
 
 ## Contributing
 

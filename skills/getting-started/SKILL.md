@@ -24,6 +24,7 @@ Research Superpowers gives Claude Code systematic workflows for scientific liter
 - **searching-literature** - PubMed search with keyword optimization
 - **evaluating-paper-relevance** - Abstract screening + full text analysis
 - **traversing-citations** - Semantic Scholar citation network traversal
+- **finding-open-access-papers** - Unpaywall API to find free versions of paywalled papers
 
 ## Basic Workflow
 
