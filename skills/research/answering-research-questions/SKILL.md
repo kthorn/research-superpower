@@ -244,7 +244,6 @@ For large research sessions, consider creating a synthesis script:
 - Generate comprehensive SUMMARY.md with:
   - Executive summary with statistics
   - Papers grouped by relevance score
-  - Key chemical scaffolds found
   - Priority recommendations for next steps
   - Methodology documentation
 - Include timestamps and reproducibility info
