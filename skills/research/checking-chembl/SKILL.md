@@ -47,7 +47,7 @@ curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?doi=DOI"
 
 **Example:**
 ```bash
-doi="10.1016/j.ejmech.2016.07.009"
+doi="10.1021/jm401507s"
 curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?doi=$doi"
 ```
 
@@ -56,13 +56,13 @@ curl -s "https://www.ebi.ac.uk/chembl/api/data/document.json?doi=$doi"
 {
   "documents": [
     {
-      "document_chembl_id": "CHEMBL3870308",
-      "doi": "10.1016/j.ejmech.2016.07.009",
-      "title": "Paper Title",
-      "abstract": "...",
-      "pubmed_id": 27476117,
-      "journal": "Eur J Med Chem",
-      "year": 2016,
+      "document_chembl_id": "CHEMBL3120156",
+      "doi": "10.1021/jm401507s",
+      "title": "Discovery and development of simeprevir (TMC435), a HCV NS3/4A protease inhibitor.",
+      "abstract": "Hepatitis C virus is a blood-borne infection...",
+      "pubmed_id": 24446688,
+      "journal": "J Med Chem",
+      "year": 2014,
       "doc_type": "PUBLICATION"
     }
   ],
@@ -93,7 +93,7 @@ fi
 
 **Query activity endpoint:**
 ```bash
-curl -s "https://www.ebi.ac.uk/chembl/api/data/activity.json?document_chembl_id=CHEMBL3870308&limit=1"
+curl -s "https://www.ebi.ac.uk/chembl/api/data/activity.json?document_chembl_id=CHEMBL3120156&limit=1"
 ```
 
 **Extract total count:**
@@ -108,29 +108,29 @@ echo "→ $activity_count bioactivity data points"
 
 **Report immediately:**
 ```
-📄 [15/127] Screening: "Rimonabant analogues as antitubercular agents"
+📄 [15/127] Screening: "Discovery and development of simeprevir"
    Abstract score: 9 → Fetching full text...
-   ✓ ChEMBL: CHEMBL3870308 (45 activity data points)
-   → MIC data for 23 compounds available
+   ✓ ChEMBL: CHEMBL3120156 (101 activity data points)
+   → IC50 data for HCV NS3 protease inhibitors available
 ```
 
 **Add to SUMMARY.md:**
 ```markdown
-### [Rimonabant analogues as antitubercular agents](https://doi.org/10.1016/j.ejmech.2016.07.009) (Score: 9)
+### [Discovery and development of simeprevir (TMC435), a HCV NS3/4A protease inhibitor](https://doi.org/10.1021/jm401507s) (Score: 9)
 
-**DOI:** [10.1016/j.ejmech.2016.07.009](https://doi.org/10.1016/j.ejmech.2016.07.009)
-**PMID:** [27476117](https://pubmed.ncbi.nlm.nih.gov/27476117/)
-**ChEMBL:** [CHEMBL3870308](https://www.ebi.ac.uk/chembl/document_report_card/CHEMBL3870308/) (45 data points)
+**DOI:** [10.1021/jm401507s](https://doi.org/10.1021/jm401507s)
+**PMID:** [24446688](https://pubmed.ncbi.nlm.nih.gov/24446688/)
+**ChEMBL:** [CHEMBL3120156](https://www.ebi.ac.uk/chembl/document_report_card/CHEMBL3120156/) (101 data points)
 
 **Key Findings:**
-- MIC data for 23 compounds against M. tuberculosis (from ChEMBL)
-- Lead compound: MIC = 31 ng/mL
-- Structures and full activity data: [ChEMBL API](https://www.ebi.ac.uk/chembl/api/data/activity.json?document_chembl_id=CHEMBL3870308)
+- IC50 data for HCV NS3/4A protease inhibitors (from ChEMBL)
+- Lead compound simeprevir (TMC435) approved for HCV treatment
+- Structures and full activity data: [ChEMBL API](https://www.ebi.ac.uk/chembl/api/data/activity.json?document_chembl_id=CHEMBL3120156)
 
 **ChEMBL Activity Summary:**
-- 23 MIC values (Mycobacterium tuberculosis)
-- 12 cytotoxicity values (Vero cells)
-- 10 metabolic stability measurements
+- IC50 values for HCV NS3/4A protease
+- PK parameters (AUC, Cmax, clearance)
+- DMPK assays (metabolic stability, permeability)
 ```
 
 **Always include ChEMBL status:**
@@ -142,12 +142,12 @@ echo "→ $activity_count bioactivity data points"
 **Add to papers-reviewed.json:**
 ```json
 {
-  "10.1016/j.ejmech.2016.07.009": {
-    "pmid": "27476117",
+  "10.1021/jm401507s": {
+    "pmid": "24446688",
     "status": "relevant",
     "score": 9,
-    "chembl_id": "CHEMBL3870308",
-    "chembl_activities": 45,
+    "chembl_id": "CHEMBL3120156",
+    "chembl_activities": 101,
     "has_structured_data": true
   }
 }
@@ -158,8 +158,8 @@ echo "→ $activity_count bioactivity data points"
 **For papers with rich ChEMBL data (>20 activities), consider extracting:**
 
 ```bash
-# Get all MIC data
-curl -s "https://www.ebi.ac.uk/chembl/api/data/activity.json?document_chembl_id=CHEMBL3870308&standard_type=MIC&limit=100" > chembl_data.json
+# Get all IC50 data
+curl -s "https://www.ebi.ac.uk/chembl/api/data/activity.json?document_chembl_id=CHEMBL3120156&standard_type=IC50&limit=100" > chembl_data.json
 
 # Summary statistics
 jq '[.activities[] | .standard_value | tonumber] | "Min: \(min), Max: \(max), Count: \(length)"' chembl_data.json
@@ -168,9 +168,9 @@ jq '[.activities[] | .standard_value | tonumber] | "Min: \(min), Max: \(max), Co
 **Report to user:**
 ```
 📊 ChEMBL data extracted:
-   - MIC range: 31-250 ng/mL (23 compounds)
+   - IC50 values for HCV NS3/4A protease
    - All structures downloaded
-   - Data saved to: chembl_CHEMBL3870308_mic.json
+   - Data saved to: chembl_CHEMBL3120156_ic50.json
 ```
 
 ## Integration with Other Skills
@@ -331,7 +331,8 @@ if __name__ == "__main__":
 
 **Usage:**
 ```bash
-python3 check_chembl.py "10.1016/j.ejmech.2016.07.009"
+python3 check_chembl.py "10.1021/jm401507s"
+# Output: ✓ CHEMBL3120156 (101 activities)
 ```
 
 ## Common Mistakes
