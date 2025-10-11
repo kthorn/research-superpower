@@ -89,6 +89,10 @@ mkdir -p "research-sessions/YYYY-MM-DD-description"/{papers,citations}
 
 (Papers will be added here as found)
 
+Example format:
+### [Paper Title](https://doi.org/10.1234/example)
+**DOI:** [10.1234/example](https://doi.org/10.1234/example) | **PMID:** [12345678](https://pubmed.ncbi.nlm.nih.gov/12345678/)
+
 ---
 
 ## Relevant Papers (Score 7)
@@ -116,6 +120,8 @@ mkdir -p "research-sessions/YYYY-MM-DD-description"/{papers,citations}
 
 (Synthesized findings will be added as research progresses)
 ```
+
+**CRITICAL: Always use clickable markdown links for DOIs and PMIDs**
 
 ### Phase 3: Search Literature
 
@@ -329,6 +335,7 @@ For large research sessions, consider creating a synthesis script:
 ## Common Mistakes
 
 **Silent work:** User can't see progress → Report EVERY paper, give updates every 10
+**Non-clickable identifiers:** Plain text DOIs/PMIDs → Always use markdown links
 **Jumping to evaluation without good search:** Too narrow results → Optimize search first
 **Not tracking papers:** Re-reviewing same papers → Always use papers-reviewed.json
 **Following all citations:** Exponential explosion → Filter before traversing

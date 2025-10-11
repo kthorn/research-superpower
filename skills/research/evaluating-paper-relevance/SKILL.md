@@ -180,7 +180,11 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 ## Highly Relevant Papers (Score ≥ 8)
 
 ### [Paper Title](https://doi.org/10.1234/example.2023) (Score: 9)
+
+**DOI:** [10.1234/example.2023](https://doi.org/10.1234/example.2023)
+**PMID:** [12345678](https://pubmed.ncbi.nlm.nih.gov/12345678/)
 **Authors:** Smith et al., 2023
+
 **Key Findings:**
 - IC50 values for 12 BTK inhibitors (Table 2)
 - Compound 7 shows >80-fold selectivity vs other kinases
@@ -196,6 +200,11 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 
 ---
 ```
+
+**IMPORTANT: Always make DOIs and PMIDs clickable links:**
+- DOI format: `[10.1234/example.2023](https://doi.org/10.1234/example.2023)`
+- PMID format: `[12345678](https://pubmed.ncbi.nlm.nih.gov/12345678/)`
+- Makes papers easy to access directly from SUMMARY.md
 
 ## Progress Reporting
 
@@ -299,6 +308,7 @@ curl -o "papers/${doi}_supp.zip" "https://publisher.com/supp/file.zip"
 **Missing supplementary data:** Many papers hide key data in SI → Always check for supplementary files
 **Silent screening:** User can't see progress → Report EVERY paper as you screen it
 **No periodic summaries:** User loses big picture → Update every 5-10 papers
+**Non-clickable DOIs/PMIDs:** Plain text identifiers → Always use markdown links
 **Re-reviewing papers:** Wastes time → Always check papers-reviewed.json first
 **Not using helper scripts:** Manually screening 100+ papers → Consider batch script
 
