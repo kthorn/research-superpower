@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Read(//home/kurtt/.config/research-superpowers/**)",
+      "Read(~/.config/research-superpowers/**)",
       "Bash(mkdir:*)",
       "Bash(ls:*)",
       "Bash(find:*)",
@@ -9,6 +9,8 @@
       "WebFetch(domain:pubmed.ncbi.nlm.nih.gov)",
       "WebFetch(domain:www.ncbi.nlm.nih.gov)",
       "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
+      "Bash(curl*https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi*)",
+      "Bash(curl*https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi*)",
       "Bash(curl*https://eutils.ncbi.nlm.nih.gov/*)",
       "Bash(curl*https://api.semanticscholar.org/*)",
       "Bash(curl*https://api.unpaywall.org/*)",
