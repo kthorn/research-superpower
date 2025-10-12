@@ -35,31 +35,42 @@ Use this skill when:
 
 **Ask domain-agnostic questions to understand what makes papers relevant:**
 
-**Key Terms (+3 pts each):**
-- "What are the MOST IMPORTANT terms for your research?"
-  - Specific entities: genes, proteins, compounds, scaffolds, organisms, diseases
-  - Critical concepts: specific methods, theories, mechanisms
-  - Essential data: measurement types (IC50, MIC, expression level, etc.)
-  - Example: "If a paper mentions X, it's almost certainly relevant"
-- "Are there synonyms or alternative names for key terms?"
+**Core Concepts:**
+- "What are the key terms/concepts for your research question?"
+  - Examples: specific genes, proteins, compounds, diseases, methods, organisms, theories
+- "Are there synonyms or alternative names?"
+- "Any terms that should EXCLUDE papers (false positives)?"
 
-**Relevant Terms (+1 pt each):**
-- "What related terms make papers MORE relevant but aren't required?"
-  - Related concepts: homologs, analogs, related diseases
-  - Context terms: derivative, series, analog, homolog, variant
-  - Supporting data: in vitro, activity, assay, synthesis
-  - Methods: protocol, measurement, analysis
-  - Example: "These terms are good signals but not sufficient alone"
+**Data Types & Artifacts:**
+- "What type of information makes a paper valuable?"
+  - Quantitative measurements (IC50, expression levels, population sizes, etc.)
+  - Protocols or methods
+  - Datasets with accessions (GEO, SRA, PDB, etc.)
+  - Code or software
+  - Chemical structures
+  - Sequences or genomes
+  - Theoretical models
+- "Do you need the actual data in the paper, or just that such data exists?"
 
-**Exclusion Terms (score = 0):**
-- "Any terms that indicate a paper is NOT relevant?"
-  - Wrong organisms, diseases, or contexts
-  - Example: "If studying bacterial compounds, exclude 'cancer' or 'mammalian'"
+**Paper Types:**
+- "What types of papers are relevant?"
+  - Primary research only?
+  - Reviews or meta-analyses?
+  - Methods papers?
+  - Clinical trials?
+  - Preprints acceptable?
+
+**Relationships & Context:**
+- "Are papers about related/analogous concepts relevant?"
+  - Example: "If studying protein X, are papers about homologs/paralogs relevant?"
+  - Example: "If studying compound A, are papers about analogs/derivatives relevant?"
+  - Example: "If studying disease X, are papers about related diseases relevant?"
+- "Does the paper need to be ABOUT your topic, or just MENTION it?"
+- "Are synthesis/methods papers relevant even without activity data?"
 
 **Edge Cases:**
 - "Can you think of papers that would LOOK relevant but aren't?"
 - "Papers that might NOT look relevant but actually are?"
-- "If a paper mentions [key term 1] + [key term 2], is it almost always relevant?"
 
 **Document responses in screening-criteria.json**
 
@@ -68,26 +79,27 @@ Use this skill when:
 **Based on brainstorming, propose scoring logic:**
 
 ```
-Scoring (additive, no upper limit):
+Scoring (0-10):
 
-Key Terms: +3 pts each
-  - Target compounds/scaffolds (e.g., "BM212", "bedaquiline")
-  - Core concepts (e.g., "tuberculosis drug resistance")
-  - Critical data types (e.g., "MIC", "IC50")
+Keywords Match (0-3 pts):
+  - Core term 1: +1 pt
+  - Core term 2 OR synonym: +1 pt
+  - Related term: +1 pt
 
-Relevant Terms: +1 pt each
-  - Related concepts (e.g., "mycobacteria", "intracellular")
-  - Related data types (e.g., "in vitro", "activity")
-  - Context terms (e.g., "analog", "derivative", "series")
+Data Type Match (0-4 pts):
+  - Measurement type (IC50, Ki, EC50, etc.): +2 pts
+  - Dataset/code available: +1 pt
+  - Methods described: +1 pt
 
-Exclusion Rules:
-  - If mentions exclusion term → score = 0
+Specificity (0-3 pts):
+  - Primary research: +3 pts
+  - Methods paper: +2 pts
+  - Review: +1 pt
+
+Special Rules:
+  - If mentions exclusion term: score = 0
 
 Threshold: ≥7 = relevant, 5-6 = possibly relevant, <5 = not relevant
-
-Example: Abstract mentions "BM212" (+3) and "SAR" (+3) = 6 pts
-  → Already close to threshold with just two key terms!
-  → Add any relevant term (e.g., "analog" +1) → 7 pts = relevant ✓
 ```
 
 **Present to user and ask:** "Does this logic match your expectations?"
@@ -97,23 +109,30 @@ Example: Abstract mentions "BM212" (+3) and "SAR" (+3) = 6 pts
 {
   "version": "1.0.0",
   "created": "2025-10-11T15:30:00Z",
-  "key_terms": {
-    "terms": ["BM212", "SQ109", "MIC", "tuberculosis drug resistance"],
-    "points_each": 3,
-    "synonyms": {
-      "BM212": ["BM-212"],
-      "tuberculosis": ["TB", "Mycobacterium tuberculosis", "M. tuberculosis"]
-    }
+  "keywords": {
+    "core_terms": ["term1", "term2"],
+    "synonyms": {"term1": ["alt1", "alt2"]},
+    "related_terms": ["related1", "related2"],
+    "exclusion_terms": ["exclude1", "exclude2"]
   },
-  "relevant_terms": {
-    "terms": ["analog", "derivative", "series", "SAR", "structure-activity", "in vitro", "activity", "mycobacteria"],
-    "points_each": 1
+  "data_types": {
+    "measurements": ["IC50", "Ki", "MIC"],
+    "datasets": ["GEO:", "SRA:", "PDB:"],
+    "methods": ["protocol", "synthesis", "assay"]
   },
-  "exclusion_terms": ["cancer", "mammalian cell", "eukaryotic"],
   "scoring": {
-    "relevance_threshold": 7,
-    "possibly_relevant_threshold": 5
-  }
+    "keywords_max": 3,
+    "data_type_max": 4,
+    "specificity_max": 3,
+    "relevance_threshold": 7
+  },
+  "special_rules": [
+    {
+      "name": "scaffold_analogs",
+      "condition": "mentions target scaffold AND (analog OR derivative)",
+      "action": "add 3 points"
+    }
+  ]
 }
 ```
 
@@ -191,34 +210,31 @@ RUBRIC TEST RESULTS (5 papers):
 ✗ PMID 23456789: Score 4 → not_relevant (user: relevant) ← FALSE NEGATIVE
 ✓ PMID 34567890: Score 8 → relevant (user: relevant) ✓
 ✓ PMID 45678901: Score 3 → not_relevant (user: not_relevant) ✓
-✗ PMID 56789012: Score 8 → relevant (user: not_relevant) ← FALSE POSITIVE
+✗ PMID 56789012: Score 7 → relevant (user: not_relevant) ← FALSE POSITIVE
 
 Accuracy: 60% (3/5 correct)
 Target: ≥80%
 
 --- FALSE NEGATIVE: PMID 23456789 ---
-Title: "Novel analogs of BM212 with improved potency"
+Title: "Novel analogs of compound X with improved potency"
 Score breakdown:
-  - Key terms: 3 pts (BM212)
-  - Relevant terms: 0 pts
+  - Keywords: 1 pt (matched "compound X")
+  - Data type: 2 pts (mentioned IC50 values)
+  - Specificity: 1 pt (primary research)
   - Total: 4 pts → not_relevant
 
-Why missed: Mentions "analogs" but it's not in relevant_terms list
-Abstract excerpt: "We synthesized 12 analogs of BM212..."
-
-Should "analog" be added as a relevant term (+1 pt)?
+Why missed: Paper discusses "analogs" but didn't trigger scaffold_analogs rule
+Abstract excerpt: "We synthesized 12 analogs of compound X..."
 
 --- FALSE POSITIVE: PMID 56789012 ---
-Title: "BM212 and SQ109 in cancer cell lines"
+Title: "Review of kinase inhibitors"
 Score breakdown:
-  - Key terms: 6 pts (BM212 +3, SQ109 +3)
-  - Relevant terms: 2 pts (activity +1, in vitro +1)
-  - Total: 8 pts → relevant
+  - Keywords: 2 pts
+  - Data type: 3 pts
+  - Specificity: 2 pts (review, not primary)
+  - Total: 7 pts → relevant
 
-Why wrong: Paper about cancer, not tuberculosis
-Abstract excerpt: "Tested BM212 and SQ109 against cancer cell lines..."
-
-Should "cancer" be added as an exclusion term (→ score 0)?
+Why wrong: Review paper, user wants primary research only
 ```
 
 #### Step 4: Iterative Refinement
@@ -228,10 +244,9 @@ Should "cancer" be added as an exclusion term (→ score 0)?
 Current accuracy: 60% (below 80% threshold)
 
 Suggestions to improve rubric:
-1. Add "analog" to relevant_terms list? (would fix false negative)
-2. Add "cancer" to exclusion_terms? (would fix false positive)
-3. Add more synonyms for key terms?
-4. Adjust threshold (currently 7)?
+1. Strengthen scaffold_analogs rule - should "synthesized N analogs" always trigger?
+2. Lower points for review papers (currently 2 pts, maybe 0 pts?)
+3. Add more synonym terms for core concepts?
 
 What would you like to adjust?
 ```
@@ -241,12 +256,18 @@ What would you like to adjust?
 **Example update:**
 ```json
 {
-  "relevant_terms": {
-    "terms": ["analog", "derivative", "series", "SAR", ...],  // Added "analog"
-    "points_each": 1
-  },
-  "exclusion_terms": ["cancer", "mammalian cell"],  // Added "cancer"
-  "version": "1.1.0"
+  "special_rules": [
+    {
+      "name": "scaffold_analogs",
+      "condition": "mentions target scaffold AND (analog OR derivative OR synthesized)",
+      "action": "add 3 points"
+    }
+  ],
+  "paper_types": {
+    "primary_research": 3,
+    "methods": 2,
+    "review": 0  // Changed from 1
+  }
 }
 ```
 
@@ -259,16 +280,10 @@ What would you like to adjust?
 UPDATED RUBRIC TEST RESULTS (5 papers):
 
 ✓ PMID 12345678: Score 9 → relevant (user: relevant) ✓
-✓ PMID 23456789: Score 5 → relevant (user: relevant) ✓ (FIXED!)
-  - Now: BM212 (+3) + analog (+1) = 4 pts → wait, still not 7...
-
-Let me recalculate:
 ✓ PMID 23456789: Score 7 → relevant (user: relevant) ✓ (FIXED!)
-  - BM212 (+3) + MIC (+3) + analog (+1) = 7 pts ✓
 ✓ PMID 34567890: Score 8 → relevant (user: relevant) ✓
 ✓ PMID 45678901: Score 3 → not_relevant (user: not_relevant) ✓
-✓ PMID 56789012: Score 0 → not_relevant (user: not_relevant) ✓ (FIXED!)
-  - Contains exclusion term "cancer" → score = 0
+✓ PMID 56789012: Score 5 → not_relevant (user: not_relevant) ✓ (FIXED!)
 
 Accuracy: 100% (5/5 correct) ✓
 Target: ≥80% ✓
@@ -404,85 +419,70 @@ research-sessions/YYYY-MM-DD-topic/
 
 ```python
 score = 0
+score += count_keyword_matches(abstract, keywords)  # 0-3 pts
+score += count_data_type_matches(abstract, data_types)  # 0-4 pts
+score += specificity_score(paper_type)  # 0-3 pts
 
-# Check exclusion terms first
-for term in exclusion_terms:
-    if term.lower() in abstract.lower():
-        return 0  # Automatic rejection
-
-# Count key term matches
-for term in key_terms:
-    if term.lower() in abstract.lower():
-        score += 3
-
-# Count relevant term matches
-for term in relevant_terms:
-    if term.lower() in abstract.lower():
-        score += 1
+# Apply special rules
+if matches_special_rule(abstract, rule):
+    score += rule['bonus_points']
 
 return score
 ```
 
-**Example:**
-```
-Abstract: "We synthesized 12 analogs of BM212 and measured MIC values..."
-
-Matches:
-- "BM212" (key term): +3 pts
-- "MIC" (key term): +3 pts
-- "analogs" (relevant term): +1 pt
-- "synthesized" (relevant term): +1 pt
-
-Total: 8 pts → relevant ✓
-```
-
-### Pattern 2: Domain-Specific Examples
+### Pattern 2: Domain-Specific Rules
 
 **Medicinal chemistry:**
 ```json
 {
-  "key_terms": {
-    "terms": ["BM212", "SQ109", "bedaquiline", "MIC", "IC50", "drug resistance"],
-    "points_each": 3
-  },
-  "relevant_terms": {
-    "terms": ["analog", "derivative", "series", "SAR", "structure-activity",
-              "in vitro", "activity", "mycobacteria", "synthesis"],
-    "points_each": 1
-  },
-  "exclusion_terms": ["cancer", "mammalian", "eukaryotic"]
+  "special_rules": [
+    {
+      "name": "scaffold_analogs",
+      "keywords": ["target_scaffold", "analog|derivative|series"],
+      "bonus": 3
+    },
+    {
+      "name": "sar_data",
+      "keywords": ["IC50|Ki|MIC", "structure-activity|SAR"],
+      "bonus": 2
+    }
+  ]
 }
 ```
 
 **Genomics:**
 ```json
 {
-  "key_terms": {
-    "terms": ["BRCA1", "breast cancer", "RNA-seq", "differential expression", "GEO:", "SRA:"],
-    "points_each": 3
-  },
-  "relevant_terms": {
-    "terms": ["gene expression", "transcriptome", "DEG", "fold change", "FDR",
-              "pathway", "enrichment", "accession"],
-    "points_each": 1
-  },
-  "exclusion_terms": ["mouse", "zebrafish", "drosophila"]
+  "special_rules": [
+    {
+      "name": "public_data",
+      "keywords": ["GEO:|SRA:|ENA:", "accession"],
+      "bonus": 3
+    },
+    {
+      "name": "differential_expression",
+      "keywords": ["DEG|differentially expressed", "RNA-seq|microarray"],
+      "bonus": 2
+    }
+  ]
 }
 ```
 
 **Computational methods:**
 ```json
 {
-  "key_terms": {
-    "terms": ["machine learning", "alignment algorithm", "phylogenetic", "github", "benchmark"],
-    "points_each": 3
-  },
-  "relevant_terms": {
-    "terms": ["accuracy", "performance", "comparison", "dataset", "implementation",
-              "code available", "software", "tool"],
-    "points_each": 1
-  },
-  "exclusion_terms": ["theoretical only", "no implementation"]
+  "special_rules": [
+    {
+      "name": "code_available",
+      "keywords": ["github|gitlab|bitbucket", "code available|software"],
+      "bonus": 3
+    },
+    {
+      "name": "benchmark",
+      "keywords": ["benchmark|comparison", "performance|accuracy"],
+      "bonus": 2
+    }
+  ]
 }
 ```
 
@@ -526,16 +526,11 @@ Agent: "I'll help you build a screening rubric. Let's start with some questions 
 User: "I'm looking for papers on tuberculosis drug resistance with MIC data for bedaquiline and clofazimine. Papers about analogs are also relevant."
 
 Agent: "Got it. Here's the initial rubric:
-
-Key Terms (+3 pts each):
-- bedaquiline, clofazimine, tuberculosis, drug resistance, MIC
-
-Relevant Terms (+1 pt each):
-- analog, derivative, series, in vitro, activity, mycobacteria
-
-Threshold: ≥7 = relevant
-
-Example: Paper with 'bedaquiline' (+3) + 'MIC' (+3) + 'analog' (+1) = 7 pts → relevant
+- Keywords: tuberculosis, drug resistance, bedaquiline, clofazimine (0-3 pts)
+- Data: MIC values, IC50, in vitro activity (0-4 pts)
+- Specificity: Primary research (0-3 pts)
+- Special rule: If mentions target drugs + 'analog/derivative' → +3 bonus pts
+- Threshold: ≥7 = relevant
 
 Does this look right?"
 
@@ -548,23 +543,13 @@ Agent: "I'll search PubMed for 20 papers and show you abstracts to classify..."
 Agent: "Testing rubric on your classifications...
 Accuracy: 70% (7/10 correct)
 - 2 false negatives (missed relevant papers)
-- 1 false positive (cancer paper marked relevant)
+- 1 false positive (marked review as relevant)
 
-False negative example:
-- Paper discusses 'derivatives of bedaquiline' with activity data
-- Score: bedaquiline (+3) + activity (+1) = 4 pts (below threshold)
-- Missing: 'derivative' not in relevant_terms
+False negative example: Paper discusses 'derivatives of bedaquiline' but scored only 5 pts because didn't explicitly say 'analog'.
 
-False positive example:
-- Paper about bedaquiline in cancer cells
-- Score: bedaquiline (+3) + MIC (+3) + in vitro (+1) = 7 pts
-- Problem: Wrong disease context
+Suggestion: Add 'derivative' and 'compound' to special rule trigger terms?"
 
-Suggestions:
-1. Add 'derivative' to relevant_terms?
-2. Add 'cancer' to exclusion_terms?
-
-User: "Yes to both."
+User: "Yes, and lower review paper points."
 
 Agent: "Updated rubric. Re-testing...
 Accuracy: 90% (9/10 correct) ✓
