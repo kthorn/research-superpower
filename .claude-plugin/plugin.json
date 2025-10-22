@@ -1,0 +1,8 @@
+{
+  "name": "research-superpowers",
+  "description": "Systematic literature searching and review toolkit for Claude Code. Search PubMed, screen papers, extract data, traverse citations, and synthesize findings from scientific literature.",
+  "version": "1.0.0",
+  "author": {
+    "name": "kthorn"
+  }
+}

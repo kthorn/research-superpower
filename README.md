@@ -19,14 +19,28 @@ A complete toolkit for **systematic literature reviews**:
 
 ## Quick Start
 
+### Option 1: Install from Marketplace (Recommended)
+
+```bash
+# In Claude Code, add the marketplace
+/plugin marketplace add https://github.com/kthorn/research-superpower
+
+# Install the plugin
+/plugin install research-superpowers@research-superpowers-marketplace
+
+# Start asking literature search questions!
+# Example: "Find papers on BTK inhibitor selectivity with IC50 data"
+# Example: "Review literature on CRISPR gene editing in cardiomyocytes"
+# Example: "What's known about MmpL3 inhibitors for tuberculosis?"
+```
+
+### Option 2: Manual Installation
+
 ```bash
 # Clone to your config directory
 git clone https://github.com/kthorn/research-superpower ~/.config/research-superpowers
 
 # Start Claude Code and tell it your literature search question
-# Example: "Find papers on BTK inhibitor selectivity with IC50 data"
-# Example: "Review literature on CRISPR gene editing in cardiomyocytes"
-# Example: "What's known about MmpL3 inhibitors for tuberculosis?"
 ```
 
 **Note:** These skills help you **find and review papers**. For analyzing experimental data or designing experiments, you'll need other tools.

@@ -1,0 +1,13 @@
+{
+  "name": "research-superpowers-marketplace",
+  "owner": {
+    "name": "kthorn"
+  },
+  "plugins": [
+    {
+      "name": "research-superpowers",
+      "source": ".",
+      "description": "Systematic literature searching and review toolkit. Search PubMed, screen papers, extract data, traverse citations, and synthesize findings from scientific literature."
+    }
+  ]
+}
